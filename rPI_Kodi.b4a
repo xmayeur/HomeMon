@@ -66,6 +66,8 @@ Sub Globals
 	Private WebView1 As WebView
 	Private btnLoadFlCam As Button
 	Private btnLoadGFl As Button
+	Private txtCAM1port As EditText
+	Private txtCAM2port As EditText
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -260,13 +262,15 @@ Sub Probe_rPI(id As String)
 	
 End Sub
 
-
 Sub btnOK_Click
 	StateManager.SetSetting("BaseURL", txtServer.Text)
 	StateManager.SetSetting("Port",txtPort.Text)
 	
 	StateManager.SetSetting("User", txtUser.Text)
 	StateManager.SetSetting("Password", txtPassword.Text)	
+	
+	StateManager.SetSetting("CAM1port", txtCAM1port.Text)
+	StateManager.SetSetting("CAM2port", txtCAM2port.Text)
 	
 	StateManager.SaveSettings
 	BaseURL=txtServer.Text & ":" & txtPort.Text
@@ -312,24 +316,15 @@ Sub btnSTop_Click
 	Job.Download( url)	
 End Sub
 
-
-Sub WebView1_OverrideUrl (url1 As String) As Boolean
-	
-End Sub
-
 Sub WebView1_UserAndPasswordRequired (Host As String, Realm As String) As String()
-	Return Array As String("xmayeur", "Pignouf2723")
+	Return Array As String(txtUser.Text, txtPassword.Text)
 End Sub
-
-Sub WebView1_PageFinished (url1 As String)
-	
-End Sub
-
 
 Sub btnLoadFlCam_Click
-	WebView1.LoadUrl("http://home.mayeur.be:8083")
+	WebView1.LoadUrl(txtServer.Text.Replace("https", "http") & ":" & txtCAM2port.text)
 End Sub
 
 Sub btnLoadGFl_Click
-	WebView1.LoadUrl("http://home.mayeur.be:8081")
+	WebView1.LoadUrl(txtServer.Text.Replace("https", "http") & ":" & txtCAM1port.text)
 End Sub
+
