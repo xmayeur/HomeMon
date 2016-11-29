@@ -1,0 +1,335 @@
+﻿Version=6.31
+NumberOfModules=1
+Module1=StateManager
+Build1=HomeMon,be.mayeur.home.homemon
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:theme, "@android:style/Theme.Holo")~\n~'End of default text.~\n~'********* TabStrip ***********************~\n~CreateResource(drawable, background_tab.xml,~\n~<selector xmlns:android="http://schemas.android.com/apk/res/android"~\n~   android:exitFadeDuration="@android:integer/config_shortAnimTime">~\n~  <item android:state_pressed="true" android:drawable="@color/background_tab_pressed" />~\n~  <item android:state_focused="true" android:drawable="@color/background_tab_pressed"/>~\n~  <item android:drawable="@android:color/transparent"/>~\n~</selector>)~\n~CreateResource(values, colors.xml,~\n~<resources>~\n~  <color name="background_tab_pressed">#6633B5E5</color>~\n~</resources>)~\n~'******************************************~\n~'*************** Light theme based on version **************~\n~SetApplicationAttribute(android:theme, "@style/LightTheme")~\n~CreateResource(values-v20, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~CreateResource(values-v14, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Holo.Light">~\n~  </style>~\n~</resources>)~\n~'**********************************************************~\n~#AdditionalJar: com.android.support:support-v4~\n~
+IconFile=
+NumberOfFiles=5
+File1=main.bal
+File2=page1.bal
+File3=page2.bal
+File4=page3.bal
+File5=Param.bal
+NumberOfLibraries=9
+Library1=core
+Library2=okhttp
+Library3=stringutils
+Library4=json
+Library5=okhttputils2
+Library6=b4xencryption
+Library7=tabstripviewpager
+Library8=randomaccessfile
+Library9=reflection
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: Home Monitor
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: True
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	Private rPI_DAC As ToggleButton
+	Private rPI_SPDIF As ToggleButton
+	
+	Private BaseURL As String 
+	Private TabStrip1 As TabStrip
+	
+	Private btnCancel As Button
+	Private btnOK As Button
+	Private txtPassword As EditText 
+	Private txtPort As EditText 
+	Private txtServer As EditText
+	Private txtUser As EditText
+	Private btnSpam As Button
+	Private txtResult As EditText
+	
+	Dim url As String
+	
+	Private btnStart As Button
+	Private btnSTop As Button
+	
+	Private WebView1 As WebView
+	Private btnLoadFlCam As Button
+	Private btnLoadGFl As Button
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+	Activity.LoadLayout("Main")
+	TabStrip1.LoadLayout("Page1", "Kodi devices")
+	TabStrip1.LoadLayout("Page2", "Spam Mon")	
+	TabStrip1.LoadLayout("Page3", "Floor Cam")
+	TabStrip1.LoadLayout("Param", "Settings")
+	Activity.AddMenuItem("Kodi devices", "mnu1")
+	Activity.AddMenuItem("Spam Monitor", "mnu2")
+	Activity.AddMenuItem("Floor Cam", "mnu3")
+
+	
+	Activity.AddMenuItem("Settings", "mnuSettings")
+	
+	' retrieve saved settings
+	txtServer.Text=StateManager.GetSetting2("BaseURL", "https://home.mayeur.be")
+	txtPort.Text=StateManager.GetSetting2("Port", "443")
+	BaseURL=txtServer.Text & ":" & txtPort.Text
+	
+	txtUser.Text=StateManager.GetSetting2("User", "xavier")
+	txtPassword.Text=StateManager.GetSetting("Password")
+	If txtPassword.Text="" Then
+		TabStrip1.ScrollTo(2, True)
+	End If
+	
+End Sub
+
+Sub Activity_Resume
+	Probe_rPI("rPI_SPDIF")
+	Probe_rPI("rPI_DAC")
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	Probe_rPI("rPI_SPDIF")
+	Probe_rPI("rPI_DAC")
+End Sub
+
+Sub mnu1_Click
+	TabStrip1.ScrollTo(0, True)
+End Sub
+
+Sub mnu2_Click
+	TabStrip1.ScrollTo(1, True)
+End Sub
+
+Sub mnu3_Click
+	TabStrip1.ScrollTo(2, True)
+End Sub
+
+Sub mnuSettings_Click
+	TabStrip1.ScrollTo(3, True)
+End Sub
+
+Sub TabStrip1_PageSelected (Position As Int)
+	' Log($"Current page: ${Position}"$)
+End Sub
+
+Sub btnrPI_DAC_CheckedChange(Checked As Boolean)
+	Dim Job As HttpJob
+
+	url = BaseURL & "/kodi"
+	Job.Initialize("rPIDAC", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	
+	If Checked Then
+		
+		Job.PostString(url,"id=rPI_DAC&method=OFF")	
+		rPI_DAC.Color=Colors.Yellow
+		rPI_DAC.TextColor=Colors.Black
+		rPI_DAC.TextOn="Stopping"
+	Else
+		Job.PostString(url,"id=rPI_DAC&method=ON")
+
+		rPI_DAC.Color=Colors.Yellow
+		rPI_DAC.TextColor=Colors.Black
+		rPI_DAC.TextOff="Booting"
+	End If
+End Sub
+
+Sub JobDone(Job As HttpJob)
+
+	Log("JobName = " & Job.JobName & ", Success = " & Job.Success)
+	If Job.Success = True Then
+		Log(Job.GetString)
+		
+		Select Job.JobName
+		Case "Login"
+			Log("Login: " & Job.GetString)
+		Case "rPIDAC" 
+			If Job.GetString = "Kodi on" Then
+				rPI_DAC.Color=Colors.Green
+				rPI_DAC.TextOff="ON"
+			Else If Job.GetString = "Kodi off" Then
+				rPI_DAC.Color=Colors.Gray	
+				rPI_DAC.TextColor=Colors.Red
+				rPI_DAC.TextOn="OFF"
+			Else
+				rPI_DAC.Color=Colors.Red
+				rPI_DAC.TextColor=Colors.White
+				rPI_DAC.TextOff="Error"
+				rPI_DAC.TextOn="Error"
+			End If
+		Case "rPISPDIF" 
+			If Job.GetString = "Kodi on" Then
+				rPI_SPDIF.Color=Colors.Green
+				rPI_SPDIF.TextOff="ON"
+			Else If Job.GetString = "Kodi off" Then
+				rPI_SPDIF.Color=Colors.Gray	
+				rPI_SPDIF.TextColor=Colors.Red
+				rPI_SPDIF.TextOn="OFF"
+			Else
+				rPI_SPDIF.Color=Colors.Red
+				rPI_SPDIF.TextColor=Colors.White
+				rPI_SPDIF.TextOff="Error"
+				rPI_SPDIF.TextOn="Error"
+			End If	
+		Case "prPI_SPDIF" 
+			If Job.GetString = "OFF" Then
+				rPI_SPDIF.Color=Colors.Gray
+				rPI_SPDIF.TextColor=Colors.Red
+				rPI_SPDIF.TextOn="OFF"
+				rPI_SPDIF.Checked=True
+			Else
+				rPI_SPDIF.Color=Colors.Green
+				rPI_SPDIF.TextColor=Colors.Black
+				rPI_SPDIF.TextOff="ON"
+				rPI_SPDIF.Checked=False
+			End If	
+		Case "prPI_DAC" 	
+			If Job.GetString = "OFF" Then
+				rPI_DAC.Color=Colors.Gray
+				rPI_DAC.TextColor=Colors.Red
+				rPI_DAC.TextOn="OFF"
+				rPI_DAC.Checked=True
+			Else
+				rPI_DAC.Color=Colors.Green
+				rPI_DAC.TextColor=Colors.Black
+				rPI_DAC.TextOff="ON"
+				rPI_DAC.Checked=False
+			End If	
+		Case "spam", "spamStart", "spamStop"
+			txtResult.Text= Job.GetString			
+		End Select
+
+	Else
+		Log("error" & Job.ErrorMessage)
+	End If
+
+
+	Job.Release	
+
+
+End Sub
+
+Sub btnrPI_SPDIF_CheckedChange(Checked As Boolean)
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/kodi"
+	Job.Initialize("rPISPDIF", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	
+	If Checked Then
+		
+		Job.PostString(url,"id=rPI_SPDIF&method=OFF")	
+		rPI_SPDIF.Color=Colors.Yellow
+		rPI_SPDIF.TextColor=Colors.Black
+		rPI_SPDIF.TextOn="Stopping"
+	Else
+		Job.PostString(url,"id=rPI_SPDIF&method=ON")
+
+		rPI_SPDIF.Color=Colors.Yellow
+		rPI_SPDIF.TextColor=Colors.Black
+		rPI_SPDIF.TextOff="Booting"
+	End If	
+End Sub
+
+Sub Probe_rPI(id As String)
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/kodistate"
+	Job.Initialize("p" & id, Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	
+	Job.Download(url & "?id=" & id)
+	
+End Sub
+
+
+Sub btnOK_Click
+	StateManager.SetSetting("BaseURL", txtServer.Text)
+	StateManager.SetSetting("Port",txtPort.Text)
+	
+	StateManager.SetSetting("User", txtUser.Text)
+	StateManager.SetSetting("Password", txtPassword.Text)	
+	
+	StateManager.SaveSettings
+	BaseURL=txtServer.Text & ":" & txtPort.Text
+	
+	TabStrip1.ScrollTo(0, True)
+End Sub
+
+Sub btnCancel_Click
+	
+End Sub
+
+Sub btnSpam_Click
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/api?cmd=spam"
+	Job.Initialize("spam", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	Job.Download( url)
+End Sub
+
+
+Sub btnStart_Click
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/api?cmd=spam&param=start"
+	Job.Initialize("spamStart", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	Job.Download( url)	
+End Sub
+
+Sub btnSTop_Click
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/api?cmd=spam&param=stop"
+	Job.Initialize("spamStop", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	Job.Download( url)	
+End Sub
+
+
+Sub WebView1_OverrideUrl (url1 As String) As Boolean
+	
+End Sub
+
+Sub WebView1_UserAndPasswordRequired (Host As String, Realm As String) As String()
+	Return Array As String("xmayeur", "Pignouf2723")
+End Sub
+
+Sub WebView1_PageFinished (url1 As String)
+	
+End Sub
+
+
+Sub btnLoadFlCam_Click
+	WebView1.LoadUrl("http://home.mayeur.be:8083")
+End Sub
+
+Sub btnLoadGFl_Click
+	WebView1.LoadUrl("http://home.mayeur.be:8081")
+End Sub
