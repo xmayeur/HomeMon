@@ -2,14 +2,19 @@
 NumberOfModules=1
 Module1=StateManager
 Build1=HomeMon,be.mayeur.home.homemon
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:theme, "@android:style/Theme.Holo")~\n~'End of default text.~\n~'********* TabStrip ***********************~\n~CreateResource(drawable, background_tab.xml,~\n~<selector xmlns:android="http://schemas.android.com/apk/res/android"~\n~   android:exitFadeDuration="@android:integer/config_shortAnimTime">~\n~  <item android:state_pressed="true" android:drawable="@color/background_tab_pressed" />~\n~  <item android:state_focused="true" android:drawable="@color/background_tab_pressed"/>~\n~  <item android:drawable="@android:color/transparent"/>~\n~</selector>)~\n~CreateResource(values, colors.xml,~\n~<resources>~\n~  <color name="background_tab_pressed">#6633B5E5</color>~\n~</resources>)~\n~'******************************************~\n~'*************** Light theme based on version **************~\n~SetApplicationAttribute(android:theme, "@style/LightTheme")~\n~CreateResource(values-v20, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~CreateResource(values-v14, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Holo.Light">~\n~  </style>~\n~</resources>)~\n~'**********************************************************~\n~#AdditionalJar: com.android.support:support-v4~\n~
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:theme, "@android:style/Theme.Material.Light")~\n~'End of default text.~\n~'********* TabStrip ***********************~\n~CreateResource(drawable, background_tab.xml,~\n~<selector xmlns:android="http://schemas.android.com/apk/res/android"~\n~   android:exitFadeDuration="@android:integer/config_shortAnimTime">~\n~  <item android:state_pressed="true" android:drawable="@color/background_tab_pressed" />~\n~  <item android:state_focused="true" android:drawable="@color/background_tab_pressed"/>~\n~  <item android:drawable="@android:color/transparent"/>~\n~</selector>)~\n~CreateResource(values, colors.xml,~\n~<resources>~\n~  <color name="background_tab_pressed">#6633B5E5</color>~\n~</resources>)~\n~'******************************************~\n~'*************** Light theme based on version **************~\n~SetApplicationAttribute(android:theme, "@style/LightTheme")~\n~CreateResource(values-v20, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~CreateResource(values-v14, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~'**********************************************************~\n~#AdditionalJar: com.android.support:support-v4~\n~
 IconFile=
-NumberOfFiles=5
-File1=main.bal
-File2=page1.bal
-File3=page2.bal
-File4=page3.bal
-File5=Param.bal
+NumberOfFiles=10
+File1=kodiBlue.png
+File2=kodiGreen.png
+File3=kodiGrey.png
+File4=kodired.png
+File5=kodiYellow.png
+File6=main.bal
+File7=page1.bal
+File8=page2.bal
+File9=page3.bal
+File10=Param.bal
 NumberOfLibraries=9
 Library1=core
 Library2=okhttp
@@ -44,7 +49,7 @@ Sub Globals
 	'These global variables will be redeclared each time the activity is created.
 	'These variables can only be accessed from this module.
 	Private rPI_DAC As ToggleButton
-	Private rPI_SPDIF As ToggleButton
+	Private rPI_SPDIF As ImageView
 	
 	Private BaseURL As String 
 	Private TabStrip1 As TabStrip
@@ -68,20 +73,23 @@ Sub Globals
 	Private btnLoadGFl As Button
 	Private txtCAM1port As EditText
 	Private txtCAM2port As EditText
+
+	Private btnClear As Button
+	Private rPI_SPDIF As ImageView
+	Private checkedSPDIF As Boolean
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	'Do not forget to load the layout file created with the visual designer. For example:
 	Activity.LoadLayout("Main")
-	TabStrip1.LoadLayout("Page1", "Kodi devices")
+	TabStrip1.LoadLayout("Page1", "Devices")
 	TabStrip1.LoadLayout("Page2", "Spam Mon")	
 	TabStrip1.LoadLayout("Page3", "Floor Cam")
 	TabStrip1.LoadLayout("Param", "Settings")
-	Activity.AddMenuItem("Kodi devices", "mnu1")
+	
+	Activity.AddMenuItem("Devices", "mnu1")
 	Activity.AddMenuItem("Spam Monitor", "mnu2")
 	Activity.AddMenuItem("Floor Cam", "mnu3")
-
-	
 	Activity.AddMenuItem("Settings", "mnuSettings")
 	
 	' retrieve saved settings
@@ -94,6 +102,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	If txtPassword.Text="" Then
 		TabStrip1.ScrollTo(2, True)
 	End If
+	
+	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
 	
 End Sub
 
@@ -127,7 +137,7 @@ Sub TabStrip1_PageSelected (Position As Int)
 	' Log($"Current page: ${Position}"$)
 End Sub
 
-Sub btnrPI_DAC_CheckedChange(Checked As Boolean)
+Sub btnrPI_DAC_CheckedChange(checked As Boolean)
 	Dim Job As HttpJob
 
 	url = BaseURL & "/kodi"
@@ -135,7 +145,7 @@ Sub btnrPI_DAC_CheckedChange(Checked As Boolean)
 	Job.Username =txtUser.Text
 	Job.Password =txtPassword.Text
 	
-	If Checked Then
+	If checked Then
 		
 		Job.PostString(url,"id=rPI_DAC&method=OFF")	
 		rPI_DAC.Color=Colors.Yellow
@@ -175,29 +185,33 @@ Sub JobDone(Job As HttpJob)
 			End If
 		Case "rPISPDIF" 
 			If Job.GetString = "Kodi on" Then
-				rPI_SPDIF.Color=Colors.Green
-				rPI_SPDIF.TextOff="ON"
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
+'				rPI_SPDIF.Color=Colors.Green
+'				rPI_SPDIF.TextOff="ON"
 			Else If Job.GetString = "Kodi off" Then
-				rPI_SPDIF.Color=Colors.Gray	
-				rPI_SPDIF.TextColor=Colors.Red
-				rPI_SPDIF.TextOn="OFF"
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+'				rPI_SPDIF.TextColor=Colors.Red
+'				rPI_SPDIF.TextOn="OFF"
 			Else
-				rPI_SPDIF.Color=Colors.Red
-				rPI_SPDIF.TextColor=Colors.White
-				rPI_SPDIF.TextOff="Error"
-				rPI_SPDIF.TextOn="Error"
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiRed.png")
+'				rPI_SPDIF.Color=Colors.Red
+'				rPI_SPDIF.TextColor=Colors.White
+'				rPI_SPDIF.TextOff="Error"
+'				rPI_SPDIF.TextOn="Error"
 			End If	
 		Case "prPI_SPDIF" 
 			If Job.GetString = "OFF" Then
-				rPI_SPDIF.Color=Colors.Gray
-				rPI_SPDIF.TextColor=Colors.Red
-				rPI_SPDIF.TextOn="OFF"
-				rPI_SPDIF.Checked=True
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")				
+'				rPI_SPDIF.Color=Colors.Gray
+'				rPI_SPDIF.TextColor=Colors.Red
+'				rPI_SPDIF.TextOn="OFF"
+'				rPI_SPDIF.Checked=True
 			Else
-				rPI_SPDIF.Color=Colors.Green
-				rPI_SPDIF.TextColor=Colors.Black
-				rPI_SPDIF.TextOff="ON"
-				rPI_SPDIF.Checked=False
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")				
+'				rPI_SPDIF.Color=Colors.Green
+'				rPI_SPDIF.TextColor=Colors.Black
+'				rPI_SPDIF.TextOff="ON"
+'				rPI_SPDIF.Checked=False
 			End If	
 		Case "prPI_DAC" 	
 			If Job.GetString = "OFF" Then
@@ -225,29 +239,6 @@ Sub JobDone(Job As HttpJob)
 
 End Sub
 
-Sub btnrPI_SPDIF_CheckedChange(Checked As Boolean)
-	Dim Job As HttpJob
-	Dim url As String
-	
-	url = BaseURL & "/kodi"
-	Job.Initialize("rPISPDIF", Me)
-	Job.Username =txtUser.Text
-	Job.Password =txtPassword.Text
-	
-	If Checked Then
-		
-		Job.PostString(url,"id=rPI_SPDIF&method=OFF")	
-		rPI_SPDIF.Color=Colors.Yellow
-		rPI_SPDIF.TextColor=Colors.Black
-		rPI_SPDIF.TextOn="Stopping"
-	Else
-		Job.PostString(url,"id=rPI_SPDIF&method=ON")
-
-		rPI_SPDIF.Color=Colors.Yellow
-		rPI_SPDIF.TextColor=Colors.Black
-		rPI_SPDIF.TextOff="Booting"
-	End If	
-End Sub
 
 Sub Probe_rPI(id As String)
 	Dim Job As HttpJob
@@ -328,3 +319,43 @@ Sub btnLoadGFl_Click
 	WebView1.LoadUrl(txtServer.Text.Replace("https", "http") & ":" & txtCAM1port.text)
 End Sub
 
+
+
+Sub Activity_WindowFocusChanged (Focused As Boolean)
+	
+End Sub
+
+Sub btnClear_Click
+	WebView1.LoadHtml("<html><body>Press a button</body></html>")
+End Sub
+
+
+Sub rPI_SPDIF_Click
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/kodi"
+	Job.Initialize("rPISPDIF", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
+	If checkedSPDIF Then
+		
+		Job.PostString(url,"id=rPI_SPDIF&method=OFF")
+			
+'		rPI_SPDIF.Color=Colors.Yellow
+'		rPI_SPDIF.TextColor=Colors.Black
+'		rPI_SPDIF.TextOn="Stopping"
+	Else
+		Job.PostString(url,"id=rPI_SPDIF&method=ON")
+
+'		rPI_SPDIF.Color=Colors.Yellow
+'		rPI_SPDIF.TextColor=Colors.Black
+'		rPI_SPDIF.TextOff="Booting"
+	End If	
+	checkedSPDIF=Not(checkedSPDIF)	
+End Sub
+
+Sub rPI_SPDIF_LongClick
+	
+End Sub
