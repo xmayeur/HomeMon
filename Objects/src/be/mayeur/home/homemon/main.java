@@ -355,8 +355,8 @@ public anywheresoftware.b4a.objects.LabelWrapper _lblipaddress = null;
 public anywheresoftware.b4a.objects.LabelWrapper _lblssid = null;
 public anywheresoftware.b4a.objects.EditTextWrapper _txthomessid = null;
 public anywheresoftware.b4a.objects.EditTextWrapper _txtlocalserverip = null;
-public be.mayeur.home.homemon.statemanager _vvvvvv7 = null;
-public be.mayeur.home.homemon.httputils2service _vvvvvv0 = null;
+public be.mayeur.home.homemon.httputils2service _vvvvvv7 = null;
+public be.mayeur.home.homemon.statemanager _vvvvvv0 = null;
 
 public static boolean isAnyActivityVisible() {
     boolean vis = false;
@@ -395,169 +395,173 @@ mostCurrent._vvvvvvv1 = "";
  //BA.debugLineNum = 91;BA.debugLine="lblSSID.Text=\"SSID: \" & MySSID";
 mostCurrent._lblssid.setText((Object)("SSID: "+mostCurrent._vvvvvvv1));
  //BA.debugLineNum = 92;BA.debugLine="AtHome=MySSID.Contains(StateManager.GetSetting2(\"";
-_vvv4 = mostCurrent._vvvvvvv1.contains(mostCurrent._vvvvvv7._vv3(mostCurrent.activityBA,"HomeSSID","CC88"));
+_vvv4 = mostCurrent._vvvvvvv1.contains(mostCurrent._vvvvvv0._vv4(mostCurrent.activityBA,"HomeSSID","CC88"));
  //BA.debugLineNum = 94;BA.debugLine="lblIPAddress.Text=\"IP: \" & MyLan.GetMyIP()";
 mostCurrent._lblipaddress.setText((Object)("IP: "+_vvv2.GetMyIP()));
  //BA.debugLineNum = 95;BA.debugLine="If AtHome Then";
 if (_vvv4) { 
  //BA.debugLineNum = 96;BA.debugLine="txtLocalServerIP.text=StateManager.GetSetting2(\"";
-mostCurrent._txtlocalserverip.setText((Object)(mostCurrent._vvvvvv7._vv3(mostCurrent.activityBA,"LocIP","192.168.0.12")));
+mostCurrent._txtlocalserverip.setText((Object)(mostCurrent._vvvvvv0._vv4(mostCurrent.activityBA,"LocIP","192.168.0.12")));
  //BA.debugLineNum = 97;BA.debugLine="MyHost=\"https://\" & txtLocalServerIP.text";
 mostCurrent._vvvvvvv2 = "https://"+mostCurrent._txtlocalserverip.getText();
  }else {
  //BA.debugLineNum = 99;BA.debugLine="txtServer.Text=StateManager.GetSetting2(\"BaseURL";
-mostCurrent._txtserver.setText((Object)(mostCurrent._vvvvvv7._vv3(mostCurrent.activityBA,"BaseURL","https://home.mayeur.be")));
+mostCurrent._txtserver.setText((Object)(mostCurrent._vvvvvv0._vv4(mostCurrent.activityBA,"BaseURL","https://home.mayeur.be")));
  //BA.debugLineNum = 100;BA.debugLine="MyHost=txtServer.Text";
 mostCurrent._vvvvvvv2 = mostCurrent._txtserver.getText();
  };
  //BA.debugLineNum = 103;BA.debugLine="txtPort.Text=StateManager.GetSetting2(\"Port\", \"44";
-mostCurrent._txtport.setText((Object)(mostCurrent._vvvvvv7._vv3(mostCurrent.activityBA,"Port","443")));
+mostCurrent._txtport.setText((Object)(mostCurrent._vvvvvv0._vv4(mostCurrent.activityBA,"Port","443")));
  //BA.debugLineNum = 104;BA.debugLine="BaseURL=MyHost & \":\" & txtPort.Text";
 mostCurrent._vvvvvvv3 = mostCurrent._vvvvvvv2+":"+mostCurrent._txtport.getText();
- //BA.debugLineNum = 106;BA.debugLine="txtUser.Text=StateManager.GetSetting2(\"User\", \"xa";
-mostCurrent._txtuser.setText((Object)(mostCurrent._vvvvvv7._vv3(mostCurrent.activityBA,"User","xavier")));
- //BA.debugLineNum = 107;BA.debugLine="txtPassword.Text=StateManager.GetSetting(\"Passwor";
-mostCurrent._txtpassword.setText((Object)(mostCurrent._vvvvvv7._vv2(mostCurrent.activityBA,"Password")));
- //BA.debugLineNum = 108;BA.debugLine="If txtPassword.Text=\"\" Then";
+ //BA.debugLineNum = 107;BA.debugLine="txtUser.Text=StateManager.GetSetting2(\"User\", \"xa";
+mostCurrent._txtuser.setText((Object)(mostCurrent._vvvvvv0._vv4(mostCurrent.activityBA,"User","xavier")));
+ //BA.debugLineNum = 108;BA.debugLine="txtPassword.Text=StateManager.GetSetting(\"Passwor";
+mostCurrent._txtpassword.setText((Object)(mostCurrent._vvvvvv0._vv3(mostCurrent.activityBA,"Password")));
+ //BA.debugLineNum = 109;BA.debugLine="If txtPassword.Text=\"\" Then";
 if ((mostCurrent._txtpassword.getText()).equals("")) { 
- //BA.debugLineNum = 109;BA.debugLine="TabStrip1.ScrollTo(2, True)";
+ //BA.debugLineNum = 110;BA.debugLine="TabStrip1.ScrollTo(2, True)";
 mostCurrent._tabstrip1.ScrollTo((int) (2),anywheresoftware.b4a.keywords.Common.True);
  };
- //BA.debugLineNum = 113;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"kodi";
+ //BA.debugLineNum = 114;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"kodi";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGrey.png").getObject()));
- //BA.debugLineNum = 114;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kodiGr";
+ //BA.debugLineNum = 115;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kodiGr";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGrey.png").getObject()));
- //BA.debugLineNum = 116;BA.debugLine="End Sub";
-return "";
-}
-public static String  _activity_pause(boolean _userclosed) throws Exception{
- //BA.debugLineNum = 123;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
- //BA.debugLineNum = 125;BA.debugLine="End Sub";
-return "";
-}
-public static String  _activity_resume() throws Exception{
- //BA.debugLineNum = 118;BA.debugLine="Sub Activity_Resume";
- //BA.debugLineNum = 119;BA.debugLine="Probe_rPI(\"rPI_SPDIF\")";
-_probe_rpi("rPI_SPDIF");
- //BA.debugLineNum = 120;BA.debugLine="Probe_rPI(\"rPI_DAC\")";
-_probe_rpi("rPI_DAC");
+ //BA.debugLineNum = 118;BA.debugLine="txtCAM1port.text=StateManager.GetSetting2(\"CAM1po";
+mostCurrent._txtcam1port.setText((Object)(mostCurrent._vvvvvv0._vv4(mostCurrent.activityBA,"CAM1port","8084")));
+ //BA.debugLineNum = 119;BA.debugLine="txtCAM2port.text=StateManager.GetSetting2(\"CAM2po";
+mostCurrent._txtcam2port.setText((Object)(mostCurrent._vvvvvv0._vv4(mostCurrent.activityBA,"CAM2port","8083")));
  //BA.debugLineNum = 121;BA.debugLine="End Sub";
 return "";
 }
+public static String  _activity_pause(boolean _userclosed) throws Exception{
+ //BA.debugLineNum = 128;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+ //BA.debugLineNum = 130;BA.debugLine="End Sub";
+return "";
+}
+public static String  _activity_resume() throws Exception{
+ //BA.debugLineNum = 123;BA.debugLine="Sub Activity_Resume";
+ //BA.debugLineNum = 124;BA.debugLine="Probe_rPI(\"rPI_SPDIF\")";
+_probe_rpi("rPI_SPDIF");
+ //BA.debugLineNum = 125;BA.debugLine="Probe_rPI(\"rPI_DAC\")";
+_probe_rpi("rPI_DAC");
+ //BA.debugLineNum = 126;BA.debugLine="End Sub";
+return "";
+}
 public static String  _btncancel_click() throws Exception{
- //BA.debugLineNum = 253;BA.debugLine="Sub btnCancel_Click";
- //BA.debugLineNum = 255;BA.debugLine="End Sub";
+ //BA.debugLineNum = 258;BA.debugLine="Sub btnCancel_Click";
+ //BA.debugLineNum = 260;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnclear_click() throws Exception{
- //BA.debugLineNum = 303;BA.debugLine="Sub btnClear_Click";
- //BA.debugLineNum = 304;BA.debugLine="WebView1.LoadHtml(\"<html><body>Press a button</bo";
+ //BA.debugLineNum = 308;BA.debugLine="Sub btnClear_Click";
+ //BA.debugLineNum = 309;BA.debugLine="WebView1.LoadHtml(\"<html><body>Press a button</bo";
 mostCurrent._webview1.LoadHtml("<html><body>Press a button</body></html>");
- //BA.debugLineNum = 305;BA.debugLine="End Sub";
+ //BA.debugLineNum = 310;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnloadflcam_click() throws Exception{
- //BA.debugLineNum = 294;BA.debugLine="Sub btnLoadFlCam_Click";
- //BA.debugLineNum = 295;BA.debugLine="WebView1.LoadUrl(MyHost.Replace(\"https\", \"http\")";
+ //BA.debugLineNum = 299;BA.debugLine="Sub btnLoadFlCam_Click";
+ //BA.debugLineNum = 300;BA.debugLine="WebView1.LoadUrl(MyHost.Replace(\"https\", \"http\")";
 mostCurrent._webview1.LoadUrl(mostCurrent._vvvvvvv2.replace("https","http")+":"+mostCurrent._txtcam2port.getText());
- //BA.debugLineNum = 296;BA.debugLine="End Sub";
+ //BA.debugLineNum = 301;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnloadgfl_click() throws Exception{
- //BA.debugLineNum = 298;BA.debugLine="Sub btnLoadGFl_Click";
- //BA.debugLineNum = 299;BA.debugLine="WebView1.LoadUrl(MyHost.Replace(\"https\", \"http\")";
+ //BA.debugLineNum = 303;BA.debugLine="Sub btnLoadGFl_Click";
+ //BA.debugLineNum = 304;BA.debugLine="WebView1.LoadUrl(MyHost.Replace(\"https\", \"http\")";
 mostCurrent._webview1.LoadUrl(mostCurrent._vvvvvvv2.replace("https","http")+":"+mostCurrent._txtcam1port.getText());
- //BA.debugLineNum = 300;BA.debugLine="End Sub";
+ //BA.debugLineNum = 305;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnok_click() throws Exception{
- //BA.debugLineNum = 233;BA.debugLine="Sub btnOK_Click";
- //BA.debugLineNum = 234;BA.debugLine="StateManager.SetSetting(\"BaseURL\", txtServer.Text";
-mostCurrent._vvvvvv7._vv0(mostCurrent.activityBA,"BaseURL",mostCurrent._txtserver.getText());
- //BA.debugLineNum = 235;BA.debugLine="StateManager.SetSetting(\"Port\",txtPort.Text)";
-mostCurrent._vvvvvv7._vv0(mostCurrent.activityBA,"Port",mostCurrent._txtport.getText());
- //BA.debugLineNum = 237;BA.debugLine="StateManager.SetSetting(\"User\", txtUser.Text)";
-mostCurrent._vvvvvv7._vv0(mostCurrent.activityBA,"User",mostCurrent._txtuser.getText());
- //BA.debugLineNum = 238;BA.debugLine="StateManager.SetSetting(\"Password\", txtPassword.T";
-mostCurrent._vvvvvv7._vv0(mostCurrent.activityBA,"Password",mostCurrent._txtpassword.getText());
- //BA.debugLineNum = 240;BA.debugLine="StateManager.SetSetting(\"CAM1port\", txtCAM1port.T";
-mostCurrent._vvvvvv7._vv0(mostCurrent.activityBA,"CAM1port",mostCurrent._txtcam1port.getText());
- //BA.debugLineNum = 241;BA.debugLine="StateManager.SetSetting(\"CAM2port\", txtCAM2port.T";
-mostCurrent._vvvvvv7._vv0(mostCurrent.activityBA,"CAM2port",mostCurrent._txtcam2port.getText());
- //BA.debugLineNum = 243;BA.debugLine="StateManager.SetSetting(\"HomeSSID\", txtHomeSSID.T";
-mostCurrent._vvvvvv7._vv0(mostCurrent.activityBA,"HomeSSID",mostCurrent._txthomessid.getText());
- //BA.debugLineNum = 244;BA.debugLine="StateManager.SetSetting(\"LocIP\", txtLocalServerIP";
-mostCurrent._vvvvvv7._vv0(mostCurrent.activityBA,"LocIP",mostCurrent._txtlocalserverip.getText());
- //BA.debugLineNum = 246;BA.debugLine="StateManager.SaveSettings";
-mostCurrent._vvvvvv7._vv6(mostCurrent.activityBA);
- //BA.debugLineNum = 247;BA.debugLine="If AtHome = False Then";
+ //BA.debugLineNum = 238;BA.debugLine="Sub btnOK_Click";
+ //BA.debugLineNum = 239;BA.debugLine="StateManager.SetSetting(\"BaseURL\", txtServer.Text";
+mostCurrent._vvvvvv0._vvv1(mostCurrent.activityBA,"BaseURL",mostCurrent._txtserver.getText());
+ //BA.debugLineNum = 240;BA.debugLine="StateManager.SetSetting(\"Port\",txtPort.Text)";
+mostCurrent._vvvvvv0._vvv1(mostCurrent.activityBA,"Port",mostCurrent._txtport.getText());
+ //BA.debugLineNum = 242;BA.debugLine="StateManager.SetSetting(\"User\", txtUser.Text)";
+mostCurrent._vvvvvv0._vvv1(mostCurrent.activityBA,"User",mostCurrent._txtuser.getText());
+ //BA.debugLineNum = 243;BA.debugLine="StateManager.SetSetting(\"Password\", txtPassword.T";
+mostCurrent._vvvvvv0._vvv1(mostCurrent.activityBA,"Password",mostCurrent._txtpassword.getText());
+ //BA.debugLineNum = 245;BA.debugLine="StateManager.SetSetting(\"CAM1port\", txtCAM1port.T";
+mostCurrent._vvvvvv0._vvv1(mostCurrent.activityBA,"CAM1port",mostCurrent._txtcam1port.getText());
+ //BA.debugLineNum = 246;BA.debugLine="StateManager.SetSetting(\"CAM2port\", txtCAM2port.T";
+mostCurrent._vvvvvv0._vvv1(mostCurrent.activityBA,"CAM2port",mostCurrent._txtcam2port.getText());
+ //BA.debugLineNum = 248;BA.debugLine="StateManager.SetSetting(\"HomeSSID\", txtHomeSSID.T";
+mostCurrent._vvvvvv0._vvv1(mostCurrent.activityBA,"HomeSSID",mostCurrent._txthomessid.getText());
+ //BA.debugLineNum = 249;BA.debugLine="StateManager.SetSetting(\"LocIP\", txtLocalServerIP";
+mostCurrent._vvvvvv0._vvv1(mostCurrent.activityBA,"LocIP",mostCurrent._txtlocalserverip.getText());
+ //BA.debugLineNum = 251;BA.debugLine="StateManager.SaveSettings";
+mostCurrent._vvvvvv0._vv7(mostCurrent.activityBA);
+ //BA.debugLineNum = 252;BA.debugLine="If AtHome = False Then";
 if (_vvv4==anywheresoftware.b4a.keywords.Common.False) { 
- //BA.debugLineNum = 248;BA.debugLine="BaseURL=txtServer.Text & \":\" & txtPort.Text";
+ //BA.debugLineNum = 253;BA.debugLine="BaseURL=txtServer.Text & \":\" & txtPort.Text";
 mostCurrent._vvvvvvv3 = mostCurrent._txtserver.getText()+":"+mostCurrent._txtport.getText();
  };
- //BA.debugLineNum = 250;BA.debugLine="TabStrip1.ScrollTo(0, True)";
+ //BA.debugLineNum = 255;BA.debugLine="TabStrip1.ScrollTo(0, True)";
 mostCurrent._tabstrip1.ScrollTo((int) (0),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 251;BA.debugLine="End Sub";
+ //BA.debugLineNum = 256;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnspam_click() throws Exception{
 be.mayeur.home.homemon.httpjob _job = null;
- //BA.debugLineNum = 257;BA.debugLine="Sub btnSpam_Click";
- //BA.debugLineNum = 258;BA.debugLine="Dim Job As HttpJob";
+ //BA.debugLineNum = 262;BA.debugLine="Sub btnSpam_Click";
+ //BA.debugLineNum = 263;BA.debugLine="Dim Job As HttpJob";
 _job = new be.mayeur.home.homemon.httpjob();
- //BA.debugLineNum = 259;BA.debugLine="Dim url As String";
+ //BA.debugLineNum = 264;BA.debugLine="Dim url As String";
 mostCurrent._vvvvvvv4 = "";
- //BA.debugLineNum = 261;BA.debugLine="url = BaseURL & \"/api?cmd=spam\"";
+ //BA.debugLineNum = 266;BA.debugLine="url = BaseURL & \"/api?cmd=spam\"";
 mostCurrent._vvvvvvv4 = mostCurrent._vvvvvvv3+"/api?cmd=spam";
- //BA.debugLineNum = 262;BA.debugLine="Job.Initialize(\"spam\", Me)";
+ //BA.debugLineNum = 267;BA.debugLine="Job.Initialize(\"spam\", Me)";
 _job._initialize(processBA,"spam",main.getObject());
- //BA.debugLineNum = 263;BA.debugLine="Job.Username =txtUser.Text";
+ //BA.debugLineNum = 268;BA.debugLine="Job.Username =txtUser.Text";
 _job._vvvvv7 = mostCurrent._txtuser.getText();
- //BA.debugLineNum = 264;BA.debugLine="Job.Password =txtPassword.Text";
+ //BA.debugLineNum = 269;BA.debugLine="Job.Password =txtPassword.Text";
 _job._vvvvv0 = mostCurrent._txtpassword.getText();
- //BA.debugLineNum = 265;BA.debugLine="Job.Download( url)";
+ //BA.debugLineNum = 270;BA.debugLine="Job.Download( url)";
 _job._vvv6(mostCurrent._vvvvvvv4);
- //BA.debugLineNum = 266;BA.debugLine="End Sub";
+ //BA.debugLineNum = 271;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnstart_click() throws Exception{
 be.mayeur.home.homemon.httpjob _job = null;
- //BA.debugLineNum = 268;BA.debugLine="Sub btnStart_Click";
- //BA.debugLineNum = 269;BA.debugLine="Dim Job As HttpJob";
+ //BA.debugLineNum = 273;BA.debugLine="Sub btnStart_Click";
+ //BA.debugLineNum = 274;BA.debugLine="Dim Job As HttpJob";
 _job = new be.mayeur.home.homemon.httpjob();
- //BA.debugLineNum = 270;BA.debugLine="Dim url As String";
+ //BA.debugLineNum = 275;BA.debugLine="Dim url As String";
 mostCurrent._vvvvvvv4 = "";
- //BA.debugLineNum = 272;BA.debugLine="url = BaseURL & \"/api?cmd=spam&param=start\"";
+ //BA.debugLineNum = 277;BA.debugLine="url = BaseURL & \"/api?cmd=spam&param=start\"";
 mostCurrent._vvvvvvv4 = mostCurrent._vvvvvvv3+"/api?cmd=spam&param=start";
- //BA.debugLineNum = 273;BA.debugLine="Job.Initialize(\"spamStart\", Me)";
+ //BA.debugLineNum = 278;BA.debugLine="Job.Initialize(\"spamStart\", Me)";
 _job._initialize(processBA,"spamStart",main.getObject());
- //BA.debugLineNum = 274;BA.debugLine="Job.Username =txtUser.Text";
+ //BA.debugLineNum = 279;BA.debugLine="Job.Username =txtUser.Text";
 _job._vvvvv7 = mostCurrent._txtuser.getText();
- //BA.debugLineNum = 275;BA.debugLine="Job.Password =txtPassword.Text";
+ //BA.debugLineNum = 280;BA.debugLine="Job.Password =txtPassword.Text";
 _job._vvvvv0 = mostCurrent._txtpassword.getText();
- //BA.debugLineNum = 276;BA.debugLine="Job.Download( url)";
+ //BA.debugLineNum = 281;BA.debugLine="Job.Download( url)";
 _job._vvv6(mostCurrent._vvvvvvv4);
- //BA.debugLineNum = 277;BA.debugLine="End Sub";
+ //BA.debugLineNum = 282;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnstop_click() throws Exception{
 be.mayeur.home.homemon.httpjob _job = null;
- //BA.debugLineNum = 279;BA.debugLine="Sub btnSTop_Click";
- //BA.debugLineNum = 280;BA.debugLine="Dim Job As HttpJob";
+ //BA.debugLineNum = 284;BA.debugLine="Sub btnSTop_Click";
+ //BA.debugLineNum = 285;BA.debugLine="Dim Job As HttpJob";
 _job = new be.mayeur.home.homemon.httpjob();
- //BA.debugLineNum = 281;BA.debugLine="Dim url As String";
+ //BA.debugLineNum = 286;BA.debugLine="Dim url As String";
 mostCurrent._vvvvvvv4 = "";
- //BA.debugLineNum = 283;BA.debugLine="url = BaseURL & \"/api?cmd=spam&param=stop\"";
+ //BA.debugLineNum = 288;BA.debugLine="url = BaseURL & \"/api?cmd=spam&param=stop\"";
 mostCurrent._vvvvvvv4 = mostCurrent._vvvvvvv3+"/api?cmd=spam&param=stop";
- //BA.debugLineNum = 284;BA.debugLine="Job.Initialize(\"spamStop\", Me)";
+ //BA.debugLineNum = 289;BA.debugLine="Job.Initialize(\"spamStop\", Me)";
 _job._initialize(processBA,"spamStop",main.getObject());
- //BA.debugLineNum = 285;BA.debugLine="Job.Username =txtUser.Text";
+ //BA.debugLineNum = 290;BA.debugLine="Job.Username =txtUser.Text";
 _job._vvvvv7 = mostCurrent._txtuser.getText();
- //BA.debugLineNum = 286;BA.debugLine="Job.Password =txtPassword.Text";
+ //BA.debugLineNum = 291;BA.debugLine="Job.Password =txtPassword.Text";
 _job._vvvvv0 = mostCurrent._txtpassword.getText();
- //BA.debugLineNum = 287;BA.debugLine="Job.Download( url)";
+ //BA.debugLineNum = 292;BA.debugLine="Job.Download( url)";
 _job._vvv6(mostCurrent._vvvvvvv4);
- //BA.debugLineNum = 288;BA.debugLine="End Sub";
+ //BA.debugLineNum = 293;BA.debugLine="End Sub";
 return "";
 }
 public static String  _globals() throws Exception{
@@ -624,164 +628,164 @@ mostCurrent._txtlocalserverip = new anywheresoftware.b4a.objects.EditTextWrapper
 return "";
 }
 public static String  _jobdone(be.mayeur.home.homemon.httpjob _job) throws Exception{
- //BA.debugLineNum = 148;BA.debugLine="Sub JobDone(Job As HttpJob)";
- //BA.debugLineNum = 150;BA.debugLine="Log(\"JobName = \" & Job.JobName & \", Success = \" &";
+ //BA.debugLineNum = 153;BA.debugLine="Sub JobDone(Job As HttpJob)";
+ //BA.debugLineNum = 155;BA.debugLine="Log(\"JobName = \" & Job.JobName & \", Success = \" &";
 anywheresoftware.b4a.keywords.Common.Log("JobName = "+_job._vvvvv5+", Success = "+BA.ObjectToString(_job._vvvvv6));
- //BA.debugLineNum = 151;BA.debugLine="If Job.Success = True Then";
+ //BA.debugLineNum = 156;BA.debugLine="If Job.Success = True Then";
 if (_job._vvvvv6==anywheresoftware.b4a.keywords.Common.True) { 
- //BA.debugLineNum = 152;BA.debugLine="Log(Job.GetString)";
+ //BA.debugLineNum = 157;BA.debugLine="Log(Job.GetString)";
 anywheresoftware.b4a.keywords.Common.Log(_job._vvvv4());
- //BA.debugLineNum = 154;BA.debugLine="Select Job.JobName";
+ //BA.debugLineNum = 159;BA.debugLine="Select Job.JobName";
 switch (BA.switchObjectToInt(_job._vvvvv5,"Login","rPIDAC","rPISPDIF","prPI_SPDIF","prPI_DAC","spam","spamStart","spamStop")) {
 case 0: {
- //BA.debugLineNum = 156;BA.debugLine="Log(\"Login: \" & Job.GetString)";
+ //BA.debugLineNum = 161;BA.debugLine="Log(\"Login: \" & Job.GetString)";
 anywheresoftware.b4a.keywords.Common.Log("Login: "+_job._vvvv4());
  break; }
 case 1: {
- //BA.debugLineNum = 158;BA.debugLine="rPI_DAC.Enabled=True";
+ //BA.debugLineNum = 163;BA.debugLine="rPI_DAC.Enabled=True";
 mostCurrent._rpi_dac.setEnabled(anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 159;BA.debugLine="If Job.GetString = \"Kodi On\" Then";
+ //BA.debugLineNum = 164;BA.debugLine="If Job.GetString = \"Kodi On\" Then";
 if ((_job._vvvv4()).equals("Kodi On")) { 
- //BA.debugLineNum = 160;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"ko";
+ //BA.debugLineNum = 165;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"ko";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGreen.png").getObject()));
  }else if((_job._vvvv4()).equals("OFF")) { 
- //BA.debugLineNum = 162;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"ko";
+ //BA.debugLineNum = 167;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"ko";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGrey.png").getObject()));
  }else if((_job._vvvv4()).equals("POWERED")) { 
- //BA.debugLineNum = 164;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"ko";
+ //BA.debugLineNum = 169;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"ko";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiBlue.png").getObject()));
  }else {
- //BA.debugLineNum = 166;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"ko";
+ //BA.debugLineNum = 171;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"ko";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiRed.png").getObject()));
  };
  break; }
 case 2: {
- //BA.debugLineNum = 169;BA.debugLine="If Job.GetString = \"Kodi On\" Then";
+ //BA.debugLineNum = 174;BA.debugLine="If Job.GetString = \"Kodi On\" Then";
 if ((_job._vvvv4()).equals("Kodi On")) { 
- //BA.debugLineNum = 170;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
+ //BA.debugLineNum = 175;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGreen.png").getObject()));
  }else if((_job._vvvv4()).equals("OFF")) { 
- //BA.debugLineNum = 172;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
+ //BA.debugLineNum = 177;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGrey.png").getObject()));
  }else if((_job._vvvv4()).equals("POWERED")) { 
- //BA.debugLineNum = 174;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"";
+ //BA.debugLineNum = 179;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiBlue.png").getObject()));
  }else {
- //BA.debugLineNum = 176;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
+ //BA.debugLineNum = 181;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiRed.png").getObject()));
  };
  break; }
 case 3: {
- //BA.debugLineNum = 179;BA.debugLine="If Job.GetString = \"OFF\"  Or Job.GetString = \"";
+ //BA.debugLineNum = 184;BA.debugLine="If Job.GetString = \"OFF\"  Or Job.GetString = \"";
 if ((_job._vvvv4()).equals("OFF") || (_job._vvvv4()).equals("success")) { 
- //BA.debugLineNum = 180;BA.debugLine="checkedSPDIF = False";
+ //BA.debugLineNum = 185;BA.debugLine="checkedSPDIF = False";
 _vvvvvvv5 = anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 181;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
+ //BA.debugLineNum = 186;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGrey.png").getObject()));
  }else if((_job._vvvv4()).equals("Kodi On")) { 
- //BA.debugLineNum = 183;BA.debugLine="checkedSPDIF = True";
+ //BA.debugLineNum = 188;BA.debugLine="checkedSPDIF = True";
 _vvvvvvv5 = anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 184;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
+ //BA.debugLineNum = 189;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGreen.png").getObject()));
  }else {
- //BA.debugLineNum = 186;BA.debugLine="checkedSPDIF=False";
+ //BA.debugLineNum = 191;BA.debugLine="checkedSPDIF=False";
 _vvvvvvv5 = anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 187;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
+ //BA.debugLineNum = 192;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"k";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiBlue.png").getObject()));
  };
  break; }
 case 4: {
- //BA.debugLineNum = 190;BA.debugLine="rPI_DAC.Enabled=True";
+ //BA.debugLineNum = 195;BA.debugLine="rPI_DAC.Enabled=True";
 mostCurrent._rpi_dac.setEnabled(anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 191;BA.debugLine="If Job.GetString = \"OFF\" Or Job.GetString = \"su";
+ //BA.debugLineNum = 196;BA.debugLine="If Job.GetString = \"OFF\" Or Job.GetString = \"su";
 if ((_job._vvvv4()).equals("OFF") || (_job._vvvv4()).equals("success")) { 
- //BA.debugLineNum = 192;BA.debugLine="checkedDAC = False";
+ //BA.debugLineNum = 197;BA.debugLine="checkedDAC = False";
 _vvvvvvv6 = anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 193;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kod";
+ //BA.debugLineNum = 198;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kod";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGrey.png").getObject()));
  }else if((_job._vvvv4()).equals("Kodi On")) { 
- //BA.debugLineNum = 195;BA.debugLine="checkedDAC = True";
+ //BA.debugLineNum = 200;BA.debugLine="checkedDAC = True";
 _vvvvvvv6 = anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 196;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kod";
+ //BA.debugLineNum = 201;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kod";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGreen.png").getObject()));
  }else {
- //BA.debugLineNum = 198;BA.debugLine="checkedDAC=False";
+ //BA.debugLineNum = 203;BA.debugLine="checkedDAC=False";
 _vvvvvvv6 = anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 199;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kod";
+ //BA.debugLineNum = 204;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kod";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiBlue.png").getObject()));
  };
  break; }
 case 5: 
 case 6: 
 case 7: {
- //BA.debugLineNum = 202;BA.debugLine="txtResult.Text= Job.GetString";
+ //BA.debugLineNum = 207;BA.debugLine="txtResult.Text= Job.GetString";
 mostCurrent._txtresult.setText((Object)(_job._vvvv4()));
  break; }
 }
 ;
  }else {
- //BA.debugLineNum = 206;BA.debugLine="Log(\"error\" & Job.ErrorMessage)";
+ //BA.debugLineNum = 211;BA.debugLine="Log(\"error\" & Job.ErrorMessage)";
 anywheresoftware.b4a.keywords.Common.Log("error"+_job._vvvvvv1);
- //BA.debugLineNum = 207;BA.debugLine="If Job.JobName.Contains(\"SPIF\") Then";
+ //BA.debugLineNum = 212;BA.debugLine="If Job.JobName.Contains(\"SPIF\") Then";
 if (_job._vvvvv5.contains("SPIF")) { 
- //BA.debugLineNum = 208;BA.debugLine="rPI_SPDIF.Enabled=True";
+ //BA.debugLineNum = 213;BA.debugLine="rPI_SPDIF.Enabled=True";
 mostCurrent._rpi_spdif.setEnabled(anywheresoftware.b4a.keywords.Common.True);
  }else if(_job._vvvvv5.contains("DAC")) { 
- //BA.debugLineNum = 210;BA.debugLine="rPI_DAC.Enabled=True";
+ //BA.debugLineNum = 215;BA.debugLine="rPI_DAC.Enabled=True";
 mostCurrent._rpi_dac.setEnabled(anywheresoftware.b4a.keywords.Common.True);
  };
  };
- //BA.debugLineNum = 215;BA.debugLine="Job.Release";
+ //BA.debugLineNum = 220;BA.debugLine="Job.Release";
 _job._vvvvv4();
- //BA.debugLineNum = 218;BA.debugLine="End Sub";
+ //BA.debugLineNum = 223;BA.debugLine="End Sub";
 return "";
 }
 public static String  _mnu1_click() throws Exception{
- //BA.debugLineNum = 127;BA.debugLine="Sub mnu1_Click";
- //BA.debugLineNum = 128;BA.debugLine="TabStrip1.ScrollTo(0, True)";
+ //BA.debugLineNum = 132;BA.debugLine="Sub mnu1_Click";
+ //BA.debugLineNum = 133;BA.debugLine="TabStrip1.ScrollTo(0, True)";
 mostCurrent._tabstrip1.ScrollTo((int) (0),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 129;BA.debugLine="End Sub";
+ //BA.debugLineNum = 134;BA.debugLine="End Sub";
 return "";
 }
 public static String  _mnu2_click() throws Exception{
- //BA.debugLineNum = 131;BA.debugLine="Sub mnu2_Click";
- //BA.debugLineNum = 132;BA.debugLine="TabStrip1.ScrollTo(1, True)";
+ //BA.debugLineNum = 136;BA.debugLine="Sub mnu2_Click";
+ //BA.debugLineNum = 137;BA.debugLine="TabStrip1.ScrollTo(1, True)";
 mostCurrent._tabstrip1.ScrollTo((int) (1),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 133;BA.debugLine="End Sub";
+ //BA.debugLineNum = 138;BA.debugLine="End Sub";
 return "";
 }
 public static String  _mnu3_click() throws Exception{
- //BA.debugLineNum = 135;BA.debugLine="Sub mnu3_Click";
- //BA.debugLineNum = 136;BA.debugLine="TabStrip1.ScrollTo(2, True)";
+ //BA.debugLineNum = 140;BA.debugLine="Sub mnu3_Click";
+ //BA.debugLineNum = 141;BA.debugLine="TabStrip1.ScrollTo(2, True)";
 mostCurrent._tabstrip1.ScrollTo((int) (2),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 137;BA.debugLine="End Sub";
+ //BA.debugLineNum = 142;BA.debugLine="End Sub";
 return "";
 }
 public static String  _mnusettings_click() throws Exception{
- //BA.debugLineNum = 139;BA.debugLine="Sub mnuSettings_Click";
- //BA.debugLineNum = 140;BA.debugLine="TabStrip1.ScrollTo(3, True)";
+ //BA.debugLineNum = 144;BA.debugLine="Sub mnuSettings_Click";
+ //BA.debugLineNum = 145;BA.debugLine="TabStrip1.ScrollTo(3, True)";
 mostCurrent._tabstrip1.ScrollTo((int) (3),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 141;BA.debugLine="End Sub";
+ //BA.debugLineNum = 146;BA.debugLine="End Sub";
 return "";
 }
 public static String  _probe_rpi(String _id) throws Exception{
 be.mayeur.home.homemon.httpjob _job = null;
- //BA.debugLineNum = 220;BA.debugLine="Sub Probe_rPI(id As String)";
- //BA.debugLineNum = 221;BA.debugLine="Dim Job As HttpJob";
+ //BA.debugLineNum = 225;BA.debugLine="Sub Probe_rPI(id As String)";
+ //BA.debugLineNum = 226;BA.debugLine="Dim Job As HttpJob";
 _job = new be.mayeur.home.homemon.httpjob();
- //BA.debugLineNum = 222;BA.debugLine="Dim url As String";
+ //BA.debugLineNum = 227;BA.debugLine="Dim url As String";
 mostCurrent._vvvvvvv4 = "";
- //BA.debugLineNum = 224;BA.debugLine="url = BaseURL & \"/kodistate\"";
+ //BA.debugLineNum = 229;BA.debugLine="url = BaseURL & \"/kodistate\"";
 mostCurrent._vvvvvvv4 = mostCurrent._vvvvvvv3+"/kodistate";
- //BA.debugLineNum = 225;BA.debugLine="Job.Initialize(\"p\" & id, Me)";
+ //BA.debugLineNum = 230;BA.debugLine="Job.Initialize(\"p\" & id, Me)";
 _job._initialize(processBA,"p"+_id,main.getObject());
- //BA.debugLineNum = 226;BA.debugLine="Job.Username =txtUser.Text";
+ //BA.debugLineNum = 231;BA.debugLine="Job.Username =txtUser.Text";
 _job._vvvvv7 = mostCurrent._txtuser.getText();
- //BA.debugLineNum = 227;BA.debugLine="Job.Password =txtPassword.Text";
+ //BA.debugLineNum = 232;BA.debugLine="Job.Password =txtPassword.Text";
 _job._vvvvv0 = mostCurrent._txtpassword.getText();
- //BA.debugLineNum = 229;BA.debugLine="Job.Download(url & \"?id=\" & id)";
+ //BA.debugLineNum = 234;BA.debugLine="Job.Download(url & \"?id=\" & id)";
 _job._vvv6(mostCurrent._vvvvvvv4+"?id="+_id);
- //BA.debugLineNum = 231;BA.debugLine="End Sub";
+ //BA.debugLineNum = 236;BA.debugLine="End Sub";
 return "";
 }
 
@@ -791,8 +795,8 @@ public static void initializeProcessGlobals() {
 	    main.processGlobalsRun = true;
 		try {
 		        main._process_globals();
-statemanager._process_globals();
 httputils2service._process_globals();
+statemanager._process_globals();
 		
         } catch (Exception e) {
 			throw new RuntimeException(e);
@@ -811,126 +815,126 @@ return "";
 }
 public static String  _rpi_dac_click() throws Exception{
 be.mayeur.home.homemon.httpjob _job = null;
- //BA.debugLineNum = 337;BA.debugLine="Sub rPI_DAC_Click";
- //BA.debugLineNum = 338;BA.debugLine="Dim Job As HttpJob";
+ //BA.debugLineNum = 342;BA.debugLine="Sub rPI_DAC_Click";
+ //BA.debugLineNum = 343;BA.debugLine="Dim Job As HttpJob";
 _job = new be.mayeur.home.homemon.httpjob();
- //BA.debugLineNum = 339;BA.debugLine="Dim url As String";
+ //BA.debugLineNum = 344;BA.debugLine="Dim url As String";
 mostCurrent._vvvvvvv4 = "";
- //BA.debugLineNum = 341;BA.debugLine="url = BaseURL & \"/kodi\"";
+ //BA.debugLineNum = 346;BA.debugLine="url = BaseURL & \"/kodi\"";
 mostCurrent._vvvvvvv4 = mostCurrent._vvvvvvv3+"/kodi";
- //BA.debugLineNum = 342;BA.debugLine="Job.Initialize(\"rPIDAC\", Me)";
+ //BA.debugLineNum = 347;BA.debugLine="Job.Initialize(\"rPIDAC\", Me)";
 _job._initialize(processBA,"rPIDAC",main.getObject());
- //BA.debugLineNum = 343;BA.debugLine="Job.Username =txtUser.Text";
+ //BA.debugLineNum = 348;BA.debugLine="Job.Username =txtUser.Text";
 _job._vvvvv7 = mostCurrent._txtuser.getText();
- //BA.debugLineNum = 344;BA.debugLine="Job.Password =txtPassword.Text";
+ //BA.debugLineNum = 349;BA.debugLine="Job.Password =txtPassword.Text";
 _job._vvvvv0 = mostCurrent._txtpassword.getText();
- //BA.debugLineNum = 345;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kodiYe";
+ //BA.debugLineNum = 350;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kodiYe";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiYellow.png").getObject()));
- //BA.debugLineNum = 346;BA.debugLine="If checkedDAC Then";
+ //BA.debugLineNum = 351;BA.debugLine="If checkedDAC Then";
 if (_vvvvvvv6) { 
- //BA.debugLineNum = 347;BA.debugLine="Job.PostString(url,\"id=rPI_DAC&method=OFF\")";
+ //BA.debugLineNum = 352;BA.debugLine="Job.PostString(url,\"id=rPI_DAC&method=OFF\")";
 _job._vvvvv1(mostCurrent._vvvvvvv4,"id=rPI_DAC&method=OFF");
  }else {
- //BA.debugLineNum = 349;BA.debugLine="Job.PostString(url,\"id=rPI_DAC&method=ON\")";
+ //BA.debugLineNum = 354;BA.debugLine="Job.PostString(url,\"id=rPI_DAC&method=ON\")";
 _job._vvvvv1(mostCurrent._vvvvvvv4,"id=rPI_DAC&method=ON");
  };
- //BA.debugLineNum = 351;BA.debugLine="checkedDAC=Not(checkedDAC)";
+ //BA.debugLineNum = 356;BA.debugLine="checkedDAC=Not(checkedDAC)";
 _vvvvvvv6 = anywheresoftware.b4a.keywords.Common.Not(_vvvvvvv6);
- //BA.debugLineNum = 352;BA.debugLine="rPI_DAC.Enabled=False";
+ //BA.debugLineNum = 357;BA.debugLine="rPI_DAC.Enabled=False";
 mostCurrent._rpi_dac.setEnabled(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 353;BA.debugLine="End Sub";
+ //BA.debugLineNum = 358;BA.debugLine="End Sub";
 return "";
 }
 public static String  _rpi_dac_longclick() throws Exception{
 be.mayeur.home.homemon.httpjob _job = null;
- //BA.debugLineNum = 355;BA.debugLine="Sub rPI_DAC_LongClick";
- //BA.debugLineNum = 356;BA.debugLine="Dim Job As HttpJob";
+ //BA.debugLineNum = 360;BA.debugLine="Sub rPI_DAC_LongClick";
+ //BA.debugLineNum = 361;BA.debugLine="Dim Job As HttpJob";
 _job = new be.mayeur.home.homemon.httpjob();
- //BA.debugLineNum = 357;BA.debugLine="Dim url As String";
+ //BA.debugLineNum = 362;BA.debugLine="Dim url As String";
 mostCurrent._vvvvvvv4 = "";
- //BA.debugLineNum = 359;BA.debugLine="url = BaseURL & \"/tdcmd\"";
+ //BA.debugLineNum = 364;BA.debugLine="url = BaseURL & \"/tdcmd\"";
 mostCurrent._vvvvvvv4 = mostCurrent._vvvvvvv3+"/tdcmd";
- //BA.debugLineNum = 360;BA.debugLine="Job.Initialize(\"prPI_DAC\", Me)";
+ //BA.debugLineNum = 365;BA.debugLine="Job.Initialize(\"prPI_DAC\", Me)";
 _job._initialize(processBA,"prPI_DAC",main.getObject());
- //BA.debugLineNum = 361;BA.debugLine="Job.Username =txtUser.Text";
+ //BA.debugLineNum = 366;BA.debugLine="Job.Username =txtUser.Text";
 _job._vvvvv7 = mostCurrent._txtuser.getText();
- //BA.debugLineNum = 362;BA.debugLine="Job.Password =txtPassword.Text";
+ //BA.debugLineNum = 367;BA.debugLine="Job.Password =txtPassword.Text";
 _job._vvvvv0 = mostCurrent._txtpassword.getText();
- //BA.debugLineNum = 363;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kodiGr";
+ //BA.debugLineNum = 368;BA.debugLine="rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, \"kodiGr";
 mostCurrent._rpi_dac.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGrey.png").getObject()));
- //BA.debugLineNum = 364;BA.debugLine="checkedDAC = False";
+ //BA.debugLineNum = 369;BA.debugLine="checkedDAC = False";
 _vvvvvvv6 = anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 365;BA.debugLine="Job.PostString(url,\"id=rPI_DAC&method=OFF\")";
+ //BA.debugLineNum = 370;BA.debugLine="Job.PostString(url,\"id=rPI_DAC&method=OFF\")";
 _job._vvvvv1(mostCurrent._vvvvvvv4,"id=rPI_DAC&method=OFF");
- //BA.debugLineNum = 366;BA.debugLine="rPI_DAC.Enabled=False";
+ //BA.debugLineNum = 371;BA.debugLine="rPI_DAC.Enabled=False";
 mostCurrent._rpi_dac.setEnabled(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 367;BA.debugLine="End Sub";
+ //BA.debugLineNum = 372;BA.debugLine="End Sub";
 return "";
 }
 public static String  _rpi_spdif_click() throws Exception{
 be.mayeur.home.homemon.httpjob _job = null;
- //BA.debugLineNum = 307;BA.debugLine="Sub rPI_SPDIF_Click";
- //BA.debugLineNum = 308;BA.debugLine="Dim Job As HttpJob";
+ //BA.debugLineNum = 312;BA.debugLine="Sub rPI_SPDIF_Click";
+ //BA.debugLineNum = 313;BA.debugLine="Dim Job As HttpJob";
 _job = new be.mayeur.home.homemon.httpjob();
- //BA.debugLineNum = 309;BA.debugLine="Dim url As String";
+ //BA.debugLineNum = 314;BA.debugLine="Dim url As String";
 mostCurrent._vvvvvvv4 = "";
- //BA.debugLineNum = 311;BA.debugLine="url = BaseURL & \"/kodi\"";
+ //BA.debugLineNum = 316;BA.debugLine="url = BaseURL & \"/kodi\"";
 mostCurrent._vvvvvvv4 = mostCurrent._vvvvvvv3+"/kodi";
- //BA.debugLineNum = 312;BA.debugLine="Job.Initialize(\"rPISPDIF\", Me)";
+ //BA.debugLineNum = 317;BA.debugLine="Job.Initialize(\"rPISPDIF\", Me)";
 _job._initialize(processBA,"rPISPDIF",main.getObject());
- //BA.debugLineNum = 313;BA.debugLine="Job.Username =txtUser.Text";
+ //BA.debugLineNum = 318;BA.debugLine="Job.Username =txtUser.Text";
 _job._vvvvv7 = mostCurrent._txtuser.getText();
- //BA.debugLineNum = 314;BA.debugLine="Job.Password =txtPassword.Text";
+ //BA.debugLineNum = 319;BA.debugLine="Job.Password =txtPassword.Text";
 _job._vvvvv0 = mostCurrent._txtpassword.getText();
- //BA.debugLineNum = 315;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"kodi";
+ //BA.debugLineNum = 320;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"kodi";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiYellow.png").getObject()));
- //BA.debugLineNum = 316;BA.debugLine="If checkedSPDIF Then";
+ //BA.debugLineNum = 321;BA.debugLine="If checkedSPDIF Then";
 if (_vvvvvvv5) { 
- //BA.debugLineNum = 317;BA.debugLine="Job.PostString(url,\"id=rPI_SPDIF&method=OFF\")";
+ //BA.debugLineNum = 322;BA.debugLine="Job.PostString(url,\"id=rPI_SPDIF&method=OFF\")";
 _job._vvvvv1(mostCurrent._vvvvvvv4,"id=rPI_SPDIF&method=OFF");
  }else {
- //BA.debugLineNum = 319;BA.debugLine="Job.PostString(url,\"id=rPI_SPDIF&method=ON\")";
+ //BA.debugLineNum = 324;BA.debugLine="Job.PostString(url,\"id=rPI_SPDIF&method=ON\")";
 _job._vvvvv1(mostCurrent._vvvvvvv4,"id=rPI_SPDIF&method=ON");
  };
- //BA.debugLineNum = 321;BA.debugLine="checkedSPDIF=Not(checkedSPDIF)";
+ //BA.debugLineNum = 326;BA.debugLine="checkedSPDIF=Not(checkedSPDIF)";
 _vvvvvvv5 = anywheresoftware.b4a.keywords.Common.Not(_vvvvvvv5);
- //BA.debugLineNum = 322;BA.debugLine="End Sub";
+ //BA.debugLineNum = 327;BA.debugLine="End Sub";
 return "";
 }
 public static String  _rpi_spdif_longclick() throws Exception{
 be.mayeur.home.homemon.httpjob _job = null;
- //BA.debugLineNum = 324;BA.debugLine="Sub rPI_SPDIF_LongClick";
- //BA.debugLineNum = 325;BA.debugLine="Dim Job As HttpJob";
+ //BA.debugLineNum = 329;BA.debugLine="Sub rPI_SPDIF_LongClick";
+ //BA.debugLineNum = 330;BA.debugLine="Dim Job As HttpJob";
 _job = new be.mayeur.home.homemon.httpjob();
- //BA.debugLineNum = 326;BA.debugLine="Dim url As String";
+ //BA.debugLineNum = 331;BA.debugLine="Dim url As String";
 mostCurrent._vvvvvvv4 = "";
- //BA.debugLineNum = 328;BA.debugLine="url = BaseURL & \"/tdcmd\"";
+ //BA.debugLineNum = 333;BA.debugLine="url = BaseURL & \"/tdcmd\"";
 mostCurrent._vvvvvvv4 = mostCurrent._vvvvvvv3+"/tdcmd";
- //BA.debugLineNum = 329;BA.debugLine="Job.Initialize(\"prPISPDIF\", Me)";
+ //BA.debugLineNum = 334;BA.debugLine="Job.Initialize(\"prPISPDIF\", Me)";
 _job._initialize(processBA,"prPISPDIF",main.getObject());
- //BA.debugLineNum = 330;BA.debugLine="Job.Username =txtUser.Text";
+ //BA.debugLineNum = 335;BA.debugLine="Job.Username =txtUser.Text";
 _job._vvvvv7 = mostCurrent._txtuser.getText();
- //BA.debugLineNum = 331;BA.debugLine="Job.Password =txtPassword.Text";
+ //BA.debugLineNum = 336;BA.debugLine="Job.Password =txtPassword.Text";
 _job._vvvvv0 = mostCurrent._txtpassword.getText();
- //BA.debugLineNum = 332;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"kodi";
+ //BA.debugLineNum = 337;BA.debugLine="rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, \"kodi";
 mostCurrent._rpi_spdif.setBitmap((android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.LoadBitmap(anywheresoftware.b4a.keywords.Common.File.getDirAssets(),"kodiGrey.png").getObject()));
- //BA.debugLineNum = 333;BA.debugLine="checkedSPDIF = False";
+ //BA.debugLineNum = 338;BA.debugLine="checkedSPDIF = False";
 _vvvvvvv5 = anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 334;BA.debugLine="Job.PostString(url,\"id=rPI_SPDIF&method=OFF\")";
+ //BA.debugLineNum = 339;BA.debugLine="Job.PostString(url,\"id=rPI_SPDIF&method=OFF\")";
 _job._vvvvv1(mostCurrent._vvvvvvv4,"id=rPI_SPDIF&method=OFF");
- //BA.debugLineNum = 335;BA.debugLine="End Sub";
+ //BA.debugLineNum = 340;BA.debugLine="End Sub";
 return "";
 }
 public static String  _tabstrip1_pageselected(int _position) throws Exception{
- //BA.debugLineNum = 143;BA.debugLine="Sub TabStrip1_PageSelected (Position As Int)";
- //BA.debugLineNum = 145;BA.debugLine="End Sub";
+ //BA.debugLineNum = 148;BA.debugLine="Sub TabStrip1_PageSelected (Position As Int)";
+ //BA.debugLineNum = 150;BA.debugLine="End Sub";
 return "";
 }
 public static String[]  _webview1_userandpasswordrequired(String _host,String _realm) throws Exception{
- //BA.debugLineNum = 290;BA.debugLine="Sub WebView1_UserAndPasswordRequired (Host As Stri";
- //BA.debugLineNum = 291;BA.debugLine="Return Array As String(txtUser.Text, txtPassword.";
+ //BA.debugLineNum = 295;BA.debugLine="Sub WebView1_UserAndPasswordRequired (Host As Stri";
+ //BA.debugLineNum = 296;BA.debugLine="Return Array As String(txtUser.Text, txtPassword.";
 if (true) return new String[]{mostCurrent._txtuser.getText(),mostCurrent._txtpassword.getText()};
- //BA.debugLineNum = 292;BA.debugLine="End Sub";
+ //BA.debugLineNum = 297;BA.debugLine="End Sub";
 return null;
 }
 }

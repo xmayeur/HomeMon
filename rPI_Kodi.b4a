@@ -1,7 +1,7 @@
 ﻿Version=6.48
 NumberOfModules=3
-Module1=StateManager
-Module2=HttpUtils2Service
+Module1=HttpUtils2Service
+Module2=StateManager
 Module3=HttpJob
 Build1=HomeMon,be.mayeur.home.homemon
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:theme, "@android:style/Theme.Material.Light")~\n~'End of default text.~\n~'********* TabStrip ***********************~\n~CreateResource(drawable, background_tab.xml,~\n~<selector xmlns:android="http://schemas.android.com/apk/res/android"~\n~   android:exitFadeDuration="@android:integer/config_shortAnimTime">~\n~  <item android:state_pressed="true" android:drawable="@color/background_tab_pressed" />~\n~  <item android:state_focused="true" android:drawable="@color/background_tab_pressed"/>~\n~  <item android:drawable="@android:color/transparent"/>~\n~</selector>)~\n~CreateResource(values, colors.xml,~\n~<resources>~\n~  <color name="background_tab_pressed">#6633B5E5</color>~\n~</resources>)~\n~'******************************************~\n~'*************** Light theme based on version **************~\n~SetApplicationAttribute(android:theme, "@style/LightTheme")~\n~CreateResource(values-v20, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~CreateResource(values-v14, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~'**********************************************************~\n~#AdditionalJar: com.android.support:support-v4~\n~
@@ -134,6 +134,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	txtPort.Text=StateManager.GetSetting2("Port", "443")
 	BaseURL=MyHost & ":" & txtPort.Text
 	
+	' Retrieve remote host user & password
 	txtUser.Text=StateManager.GetSetting2("User", "xavier")
 	txtPassword.Text=StateManager.GetSetting("Password")
 	If txtPassword.Text="" Then
@@ -143,6 +144,10 @@ Sub Activity_Create(FirstTime As Boolean)
 	' Initialize buttons with pictures
 	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
 	rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+	
+	' Get webcam parameters
+	txtCAM1port.text=StateManager.GetSetting2("CAM1port", "8084")
+	txtCAM2port.text=StateManager.GetSetting2("CAM2port", "8083")
 	
 End Sub
 
