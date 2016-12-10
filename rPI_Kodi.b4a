@@ -124,7 +124,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	lblIPAddress.Text="IP: " & MyLan.GetMyIP()
 	If AtHome Then
-		MyHost="https://" & StateManager.GetSetting2("LocalServerIP", "192.168.0.12")
+		txtLocalServerIP.text=StateManager.GetSetting2("LocIP", "192.168.0.12")
+		MyHost="https://" & txtLocalServerIP.text
 	Else
 		txtServer.Text=StateManager.GetSetting2("BaseURL", "https://home.mayeur.be")
 		MyHost=txtServer.Text
@@ -151,8 +152,7 @@ Sub Activity_Resume
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
-	Probe_rPI("rPI_SPDIF")
-	Probe_rPI("rPI_DAC")
+
 End Sub
 
 Sub mnu1_Click
@@ -186,6 +186,7 @@ Sub JobDone(Job As HttpJob)
 		Case "Login"
 				Log("Login: " & Job.GetString)
 		Case "rPIDAC"
+				rPI_DAC.Enabled=True
 				If Job.GetString = "Kodi On" Then
 					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
 				Else If Job.GetString = "OFF" Then
@@ -206,7 +207,7 @@ Sub JobDone(Job As HttpJob)
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiRed.png")
 			End If	
 		Case "prPI_SPDIF" 
-			If Job.GetString = "OFF" Then
+				If Job.GetString = "OFF"  Or Job.GetString = "success" Then
 				checkedSPDIF = False
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")				
 			Else if Job.GetString = "Kodi On" Then
@@ -216,23 +217,29 @@ Sub JobDone(Job As HttpJob)
 				checkedSPDIF=False
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")				
 			End If	
-			Case "prPI_DAC"
-				If Job.GetString = "OFF" Then
-					checkedDAC = False
-					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
-				Else if Job.GetString = "Kodi On" Then
-					checkedDAC = True
-					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
-				Else ' powered but kodi does not answer
-					checkedDAC=False
-					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
-				End If
+		Case "prPI_DAC"
+			rPI_DAC.Enabled=True
+			If Job.GetString = "OFF" Or Job.GetString = "success" Then
+				checkedDAC = False
+				rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+			Else if Job.GetString = "Kodi On" Then
+				checkedDAC = True
+				rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
+			Else ' powered but kodi does not answer
+				checkedDAC=False
+				rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
+			End If
 		Case "spam", "spamStart", "spamStop"
 			txtResult.Text= Job.GetString			
 		End Select
 
 	Else
 		Log("error" & Job.ErrorMessage)	
+		If Job.JobName.Contains("SPIF") Then
+			rPI_SPDIF.Enabled=True
+		Else if  Job.JobName.Contains("DAC") Then
+			rPI_DAC.Enabled=True
+		End If
 	End If
 
 
@@ -265,7 +272,7 @@ Sub btnOK_Click
 	StateManager.SetSetting("CAM2port", txtCAM2port.Text)
 	
 	StateManager.SetSetting("HomeSSID", txtHomeSSID.Text)
-	StateManager.SetSetting("LocalServerIP", txtLocalServerIP.Text)
+	StateManager.SetSetting("LocIP", txtLocalServerIP.Text)
 	
 	StateManager.SaveSettings
 	If AtHome = False Then
@@ -373,6 +380,7 @@ Sub rPI_DAC_Click
 		Job.PostString(url,"id=rPI_DAC&method=ON")
 	End If
 	checkedDAC=Not(checkedDAC)
+	rPI_DAC.Enabled=False
 End Sub
 
 Sub rPI_DAC_LongClick
@@ -380,10 +388,11 @@ Sub rPI_DAC_LongClick
 	Dim url As String
 	
 	url = BaseURL & "/tdcmd"
-	Job.Initialize("prPIDAC", Me)
+	Job.Initialize("prPI_DAC", Me)
 	Job.Username =txtUser.Text
 	Job.Password =txtPassword.Text
 	rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
 	checkedDAC = False
 	Job.PostString(url,"id=rPI_DAC&method=OFF")
+	rPI_DAC.Enabled=False
 End Sub
