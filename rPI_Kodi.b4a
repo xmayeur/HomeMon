@@ -1,6 +1,8 @@
-﻿Version=6.31
-NumberOfModules=1
+﻿Version=6.48
+NumberOfModules=3
 Module1=StateManager
+Module2=HttpUtils2Service
+Module3=HttpJob
 Build1=HomeMon,be.mayeur.home.homemon
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:theme, "@android:style/Theme.Material.Light")~\n~'End of default text.~\n~'********* TabStrip ***********************~\n~CreateResource(drawable, background_tab.xml,~\n~<selector xmlns:android="http://schemas.android.com/apk/res/android"~\n~   android:exitFadeDuration="@android:integer/config_shortAnimTime">~\n~  <item android:state_pressed="true" android:drawable="@color/background_tab_pressed" />~\n~  <item android:state_focused="true" android:drawable="@color/background_tab_pressed"/>~\n~  <item android:drawable="@android:color/transparent"/>~\n~</selector>)~\n~CreateResource(values, colors.xml,~\n~<resources>~\n~  <color name="background_tab_pressed">#6633B5E5</color>~\n~</resources>)~\n~'******************************************~\n~'*************** Light theme based on version **************~\n~SetApplicationAttribute(android:theme, "@style/LightTheme")~\n~CreateResource(values-v20, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~CreateResource(values-v14, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~'**********************************************************~\n~#AdditionalJar: com.android.support:support-v4~\n~
 IconFile=
@@ -15,16 +17,17 @@ File7=page1.bal
 File8=page2.bal
 File9=page3.bal
 File10=Param.bal
-NumberOfLibraries=9
+NumberOfLibraries=10
 Library1=core
 Library2=okhttp
 Library3=stringutils
 Library4=json
-Library5=okhttputils2
+Library5=network
 Library6=b4xencryption
 Library7=tabstripviewpager
 Library8=randomaccessfile
 Library9=reflection
+Library10=abwifi
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Home Monitor
@@ -43,14 +46,15 @@ Library9=reflection
 Sub Process_Globals
 	'These global variables will be declared once when the application starts.
 	'These variables can be accessed from all modules.
+	Dim MyLan As ServerSocket
+	Dim MyWiFi As ABWifi
+	Dim AtHome As Boolean
 End Sub
 
 Sub Globals
 	'These global variables will be redeclared each time the activity is created.
 	'These variables can only be accessed from this module.
-	Private rPI_DAC As ToggleButton
-	Private rPI_SPDIF As ImageView
-	
+
 	Private BaseURL As String 
 	Private TabStrip1 As TabStrip
 	
@@ -75,8 +79,21 @@ Sub Globals
 	Private txtCAM2port As EditText
 
 	Private btnClear As Button
+
+	Private rPI_DAC As ImageView
 	Private rPI_SPDIF As ImageView
+	
 	Private checkedSPDIF As Boolean
+	Private checkedDAC As Boolean
+	
+	Private MyHost As String
+	Private MySSID As String
+	
+	Private lblIPAddress As Label
+	Private lblSSID As Label
+	Private txtHomeSSID As EditText
+	Private txtLocalServerIP As EditText
+	
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -93,9 +110,28 @@ Sub Activity_Create(FirstTime As Boolean)
 	Activity.AddMenuItem("Settings", "mnuSettings")
 	
 	' retrieve saved settings
-	txtServer.Text=StateManager.GetSetting2("BaseURL", "https://home.mayeur.be")
+	
+	' check networks parameters
+	MyLan.Initialize(0, "")
+	
+	If MyWiFi.ABLoadWifi() Then
+		MySSID=MyWiFi.ABGetCurrentWifiInfo.SSID
+	Else
+		MySSID=""
+	End If
+	lblSSID.Text="SSID: " & MySSID
+	AtHome=MySSID.Contains(StateManager.GetSetting2("HomeSSID", "CC88"))
+	
+	lblIPAddress.Text="IP: " & MyLan.GetMyIP()
+	If AtHome Then
+		MyHost="https://" & StateManager.GetSetting2("LocalServerIP", "192.168.0.12")
+	Else
+		txtServer.Text=StateManager.GetSetting2("BaseURL", "https://home.mayeur.be")
+		MyHost=txtServer.Text
+	End If
+
 	txtPort.Text=StateManager.GetSetting2("Port", "443")
-	BaseURL=txtServer.Text & ":" & txtPort.Text
+	BaseURL=MyHost & ":" & txtPort.Text
 	
 	txtUser.Text=StateManager.GetSetting2("User", "xavier")
 	txtPassword.Text=StateManager.GetSetting("Password")
@@ -103,7 +139,9 @@ Sub Activity_Create(FirstTime As Boolean)
 		TabStrip1.ScrollTo(2, True)
 	End If
 	
+	' Initialize buttons with pictures
 	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+	rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
 	
 End Sub
 
@@ -137,28 +175,6 @@ Sub TabStrip1_PageSelected (Position As Int)
 	' Log($"Current page: ${Position}"$)
 End Sub
 
-Sub btnrPI_DAC_CheckedChange(checked As Boolean)
-	Dim Job As HttpJob
-
-	url = BaseURL & "/kodi"
-	Job.Initialize("rPIDAC", Me)
-	Job.Username =txtUser.Text
-	Job.Password =txtPassword.Text
-	
-	If checked Then
-		
-		Job.PostString(url,"id=rPI_DAC&method=OFF")	
-		rPI_DAC.Color=Colors.Yellow
-		rPI_DAC.TextColor=Colors.Black
-		rPI_DAC.TextOn="Stopping"
-	Else
-		Job.PostString(url,"id=rPI_DAC&method=ON")
-
-		rPI_DAC.Color=Colors.Yellow
-		rPI_DAC.TextColor=Colors.Black
-		rPI_DAC.TextOff="Booting"
-	End If
-End Sub
 
 Sub JobDone(Job As HttpJob)
 
@@ -168,69 +184,55 @@ Sub JobDone(Job As HttpJob)
 		
 		Select Job.JobName
 		Case "Login"
-			Log("Login: " & Job.GetString)
-		Case "rPIDAC" 
-			If Job.GetString = "Kodi on" Then
-				rPI_DAC.Color=Colors.Green
-				rPI_DAC.TextOff="ON"
-			Else If Job.GetString = "Kodi off" Then
-				rPI_DAC.Color=Colors.Gray	
-				rPI_DAC.TextColor=Colors.Red
-				rPI_DAC.TextOn="OFF"
-			Else
-				rPI_DAC.Color=Colors.Red
-				rPI_DAC.TextColor=Colors.White
-				rPI_DAC.TextOff="Error"
-				rPI_DAC.TextOn="Error"
-			End If
+				Log("Login: " & Job.GetString)
+		Case "rPIDAC"
+				If Job.GetString = "Kodi On" Then
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
+				Else If Job.GetString = "OFF" Then
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+				Else If Job.GetString = "POWERED" Then
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
+				Else
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiRed.png")
+				End If
 		Case "rPISPDIF" 
-			If Job.GetString = "Kodi on" Then
+			If Job.GetString = "Kodi On" Then
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
-'				rPI_SPDIF.Color=Colors.Green
-'				rPI_SPDIF.TextOff="ON"
-			Else If Job.GetString = "Kodi off" Then
+			Else If Job.GetString = "OFF" Then
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
-'				rPI_SPDIF.TextColor=Colors.Red
-'				rPI_SPDIF.TextOn="OFF"
+			Else If Job.GetString = "POWERED" Then
+					rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
 			Else
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiRed.png")
-'				rPI_SPDIF.Color=Colors.Red
-'				rPI_SPDIF.TextColor=Colors.White
-'				rPI_SPDIF.TextOff="Error"
-'				rPI_SPDIF.TextOn="Error"
 			End If	
 		Case "prPI_SPDIF" 
 			If Job.GetString = "OFF" Then
+				checkedSPDIF = False
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")				
-'				rPI_SPDIF.Color=Colors.Gray
-'				rPI_SPDIF.TextColor=Colors.Red
-'				rPI_SPDIF.TextOn="OFF"
-'				rPI_SPDIF.Checked=True
-			Else
-				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")				
-'				rPI_SPDIF.Color=Colors.Green
-'				rPI_SPDIF.TextColor=Colors.Black
-'				rPI_SPDIF.TextOff="ON"
-'				rPI_SPDIF.Checked=False
+			Else if Job.GetString = "Kodi On" Then
+				checkedSPDIF = True
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")	
+			Else ' powered but kodi does not answer
+				checkedSPDIF=False
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")				
 			End If	
-		Case "prPI_DAC" 	
-			If Job.GetString = "OFF" Then
-				rPI_DAC.Color=Colors.Gray
-				rPI_DAC.TextColor=Colors.Red
-				rPI_DAC.TextOn="OFF"
-				rPI_DAC.Checked=True
-			Else
-				rPI_DAC.Color=Colors.Green
-				rPI_DAC.TextColor=Colors.Black
-				rPI_DAC.TextOff="ON"
-				rPI_DAC.Checked=False
-			End If	
+			Case "prPI_DAC"
+				If Job.GetString = "OFF" Then
+					checkedDAC = False
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+				Else if Job.GetString = "Kodi On" Then
+					checkedDAC = True
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
+				Else ' powered but kodi does not answer
+					checkedDAC=False
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
+				End If
 		Case "spam", "spamStart", "spamStop"
 			txtResult.Text= Job.GetString			
 		End Select
 
 	Else
-		Log("error" & Job.ErrorMessage)
+		Log("error" & Job.ErrorMessage)	
 	End If
 
 
@@ -238,7 +240,6 @@ Sub JobDone(Job As HttpJob)
 
 
 End Sub
-
 
 Sub Probe_rPI(id As String)
 	Dim Job As HttpJob
@@ -263,9 +264,13 @@ Sub btnOK_Click
 	StateManager.SetSetting("CAM1port", txtCAM1port.Text)
 	StateManager.SetSetting("CAM2port", txtCAM2port.Text)
 	
-	StateManager.SaveSettings
-	BaseURL=txtServer.Text & ":" & txtPort.Text
+	StateManager.SetSetting("HomeSSID", txtHomeSSID.Text)
+	StateManager.SetSetting("LocalServerIP", txtLocalServerIP.Text)
 	
+	StateManager.SaveSettings
+	If AtHome = False Then
+		BaseURL=txtServer.Text & ":" & txtPort.Text
+	End If
 	TabStrip1.ScrollTo(0, True)
 End Sub
 
@@ -283,7 +288,6 @@ Sub btnSpam_Click
 	Job.Password =txtPassword.Text
 	Job.Download( url)
 End Sub
-
 
 Sub btnStart_Click
 	Dim Job As HttpJob
@@ -312,23 +316,17 @@ Sub WebView1_UserAndPasswordRequired (Host As String, Realm As String) As String
 End Sub
 
 Sub btnLoadFlCam_Click
-	WebView1.LoadUrl(txtServer.Text.Replace("https", "http") & ":" & txtCAM2port.text)
+	WebView1.LoadUrl(MyHost.Replace("https", "http") & ":" & txtCAM2port.text)
 End Sub
 
 Sub btnLoadGFl_Click
-	WebView1.LoadUrl(txtServer.Text.Replace("https", "http") & ":" & txtCAM1port.text)
+	WebView1.LoadUrl(MyHost.Replace("https", "http") & ":" & txtCAM1port.text)
 End Sub
 
-
-
-Sub Activity_WindowFocusChanged (Focused As Boolean)
-	
-End Sub
 
 Sub btnClear_Click
 	WebView1.LoadHtml("<html><body>Press a button</body></html>")
 End Sub
-
 
 Sub rPI_SPDIF_Click
 	Dim Job As HttpJob
@@ -340,22 +338,52 @@ Sub rPI_SPDIF_Click
 	Job.Password =txtPassword.Text
 	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
 	If checkedSPDIF Then
-		
-		Job.PostString(url,"id=rPI_SPDIF&method=OFF")
-			
-'		rPI_SPDIF.Color=Colors.Yellow
-'		rPI_SPDIF.TextColor=Colors.Black
-'		rPI_SPDIF.TextOn="Stopping"
+		Job.PostString(url,"id=rPI_SPDIF&method=OFF")			
 	Else
 		Job.PostString(url,"id=rPI_SPDIF&method=ON")
-
-'		rPI_SPDIF.Color=Colors.Yellow
-'		rPI_SPDIF.TextColor=Colors.Black
-'		rPI_SPDIF.TextOff="Booting"
 	End If	
 	checkedSPDIF=Not(checkedSPDIF)	
 End Sub
 
 Sub rPI_SPDIF_LongClick
+	Dim Job As HttpJob
+	Dim url As String
 	
+	url = BaseURL & "/tdcmd"
+	Job.Initialize("prPISPDIF", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+	checkedSPDIF = False
+	Job.PostString(url,"id=rPI_SPDIF&method=OFF")		
+End Sub
+
+Sub rPI_DAC_Click
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/kodi"
+	Job.Initialize("rPIDAC", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
+	If checkedDAC Then
+		Job.PostString(url,"id=rPI_DAC&method=OFF")
+	Else
+		Job.PostString(url,"id=rPI_DAC&method=ON")
+	End If
+	checkedDAC=Not(checkedDAC)
+End Sub
+
+Sub rPI_DAC_LongClick
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/tdcmd"
+	Job.Initialize("prPIDAC", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+	checkedDAC = False
+	Job.PostString(url,"id=rPI_DAC&method=OFF")
 End Sub
