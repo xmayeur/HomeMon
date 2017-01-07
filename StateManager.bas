@@ -1,5 +1,5 @@
 ﻿Type=StaticCode
-Version=6.48
+Version=6.5
 ModulesStructureVersion=1
 B4A=true
 @EndOfDesignText@

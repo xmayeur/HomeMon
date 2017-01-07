@@ -16,9 +16,9 @@ public static int _v7 = 0;
 public static String _v0 = "";
 public static String _vv1 = "";
 public static anywheresoftware.b4a.objects.collections.Map _vv2 = null;
-public be.mayeur.home.homemon.main _vvvvvv6 = null;
-public be.mayeur.home.homemon.httputils2service _vvvvvv7 = null;
-public static Object[]  _vvvvvvvv3(anywheresoftware.b4a.BA _ba,anywheresoftware.b4a.objects.collections.List _list1) throws Exception{
+public be.mayeur.home.homemon.main _vvvvvv7 = null;
+public be.mayeur.home.homemon.httputils2service _vvvvvv0 = null;
+public static Object[]  _vvvvvvvv0(anywheresoftware.b4a.BA _ba,anywheresoftware.b4a.objects.collections.List _list1) throws Exception{
  //BA.debugLineNum = 203;BA.debugLine="Private Sub getNextItem(list1 As List) As Object()";
  //BA.debugLineNum = 204;BA.debugLine="listPosition = listPosition + 1";
 _v7 = (int) (_v7+1);
@@ -57,7 +57,7 @@ if (true) return _v;
  //BA.debugLineNum = 25;BA.debugLine="End Sub";
 return "";
 }
-public static String  _vvvvvvvv4(anywheresoftware.b4a.BA _ba,anywheresoftware.b4a.objects.ConcreteViewWrapper _v,anywheresoftware.b4a.objects.collections.List _list1) throws Exception{
+public static String  _vvvvvvvvv1(anywheresoftware.b4a.BA _ba,anywheresoftware.b4a.objects.ConcreteViewWrapper _v,anywheresoftware.b4a.objects.collections.List _list1) throws Exception{
 Object[] _data = null;
 anywheresoftware.b4a.objects.EditTextWrapper _edit = null;
 anywheresoftware.b4a.objects.SpinnerWrapper _spinner1 = null;
@@ -88,7 +88,7 @@ _edit = new anywheresoftware.b4a.objects.EditTextWrapper();
  //BA.debugLineNum = 142;BA.debugLine="edit = v";
 _edit.setObject((android.widget.EditText)(_v.getObject()));
  //BA.debugLineNum = 143;BA.debugLine="data = getNextItem(list1)";
-_data = _vvvvvvvv3(_ba,_list1);
+_data = _vvvvvvvv0(_ba,_list1);
  //BA.debugLineNum = 144;BA.debugLine="edit.Text = data(0)";
 _edit.setText(_data[(int) (0)]);
  //BA.debugLineNum = 145;BA.debugLine="edit.SelectionStart = data(1)";
@@ -99,7 +99,7 @@ _spinner1 = new anywheresoftware.b4a.objects.SpinnerWrapper();
  //BA.debugLineNum = 148;BA.debugLine="spinner1 = v";
 _spinner1.setObject((anywheresoftware.b4a.objects.SpinnerWrapper.B4ASpinner)(_v.getObject()));
  //BA.debugLineNum = 149;BA.debugLine="data = getNextItem(list1)";
-_data = _vvvvvvvv3(_ba,_list1);
+_data = _vvvvvvvv0(_ba,_list1);
  //BA.debugLineNum = 150;BA.debugLine="spinner1.SelectedIndex = data(0)";
 _spinner1.setSelectedIndex((int)(BA.ObjectToNumber(_data[(int) (0)])));
  }else if(_v.getObjectOrNull() instanceof android.widget.CheckBox) { 
@@ -108,7 +108,7 @@ _check = new anywheresoftware.b4a.objects.CompoundButtonWrapper.CheckBoxWrapper(
  //BA.debugLineNum = 153;BA.debugLine="check = v";
 _check.setObject((android.widget.CheckBox)(_v.getObject()));
  //BA.debugLineNum = 154;BA.debugLine="data = getNextItem(list1)";
-_data = _vvvvvvvv3(_ba,_list1);
+_data = _vvvvvvvv0(_ba,_list1);
  //BA.debugLineNum = 155;BA.debugLine="check.Checked = data(0)";
 _check.setChecked(BA.ObjectToBoolean(_data[(int) (0)]));
  }else if(_v.getObjectOrNull() instanceof android.widget.RadioButton) { 
@@ -117,7 +117,7 @@ _radio = new anywheresoftware.b4a.objects.CompoundButtonWrapper.RadioButtonWrapp
  //BA.debugLineNum = 158;BA.debugLine="radio = v";
 _radio.setObject((android.widget.RadioButton)(_v.getObject()));
  //BA.debugLineNum = 159;BA.debugLine="data = getNextItem(list1)";
-_data = _vvvvvvvv3(_ba,_list1);
+_data = _vvvvvvvv0(_ba,_list1);
  //BA.debugLineNum = 160;BA.debugLine="radio.Checked = data(0)";
 _radio.setChecked(BA.ObjectToBoolean(_data[(int) (0)]));
  }else if(_v.getObjectOrNull() instanceof android.widget.ToggleButton) { 
@@ -126,7 +126,7 @@ _toggle = new anywheresoftware.b4a.objects.CompoundButtonWrapper.ToggleButtonWra
  //BA.debugLineNum = 163;BA.debugLine="toggle = v";
 _toggle.setObject((android.widget.ToggleButton)(_v.getObject()));
  //BA.debugLineNum = 164;BA.debugLine="data = getNextItem(list1)";
-_data = _vvvvvvvv3(_ba,_list1);
+_data = _vvvvvvvv0(_ba,_list1);
  //BA.debugLineNum = 165;BA.debugLine="toggle.Checked = data(0)";
 _toggle.setChecked(BA.ObjectToBoolean(_data[(int) (0)]));
  }else if(_v.getObjectOrNull() instanceof android.widget.SeekBar) { 
@@ -135,7 +135,7 @@ _seek = new anywheresoftware.b4a.objects.SeekBarWrapper();
  //BA.debugLineNum = 168;BA.debugLine="seek = v";
 _seek.setObject((android.widget.SeekBar)(_v.getObject()));
  //BA.debugLineNum = 169;BA.debugLine="data = getNextItem(list1)";
-_data = _vvvvvvvv3(_ba,_list1);
+_data = _vvvvvvvv0(_ba,_list1);
  //BA.debugLineNum = 170;BA.debugLine="seek.Value = data(0)";
 _seek.setValue((int)(BA.ObjectToNumber(_data[(int) (0)])));
  }else if(_v.getObjectOrNull() instanceof android.widget.TabHost) { 
@@ -144,7 +144,7 @@ _th = new anywheresoftware.b4a.objects.TabHostWrapper();
  //BA.debugLineNum = 173;BA.debugLine="th = v";
 _th.setObject((android.widget.TabHost)(_v.getObject()));
  //BA.debugLineNum = 174;BA.debugLine="data = getNextItem(list1)";
-_data = _vvvvvvvv3(_ba,_list1);
+_data = _vvvvvvvv0(_ba,_list1);
  //BA.debugLineNum = 175;BA.debugLine="For i = 0 To th.TabCount - 1";
 {
 final int step37 = 1;
@@ -170,7 +170,7 @@ final int step45 = 1;
 final int limit45 = (int) (_tabparentpanel.getNumberOfViews()-1);
 for (_i = (int) (0) ; (step45 > 0 && _i <= limit45) || (step45 < 0 && _i >= limit45); _i = ((int)(0 + _i + step45)) ) {
  //BA.debugLineNum = 184;BA.debugLine="innerRestoreState(tabParentPanel.GetView(i), li";
-_vvvvvvvv4(_ba,_tabparentpanel.GetView(_i),_list1);
+_vvvvvvvvv1(_ba,_tabparentpanel.GetView(_i),_list1);
  }
 };
  }else if(_v.getObjectOrNull() instanceof android.widget.ScrollView) { 
@@ -179,7 +179,7 @@ _sv = new anywheresoftware.b4a.objects.ScrollViewWrapper();
  //BA.debugLineNum = 188;BA.debugLine="sv = v";
 _sv.setObject((android.widget.ScrollView)(_v.getObject()));
  //BA.debugLineNum = 189;BA.debugLine="data = getNextItem(list1)";
-_data = _vvvvvvvv3(_ba,_list1);
+_data = _vvvvvvvv0(_ba,_list1);
  //BA.debugLineNum = 190;BA.debugLine="sv.ScrollPosition = data(0)";
 _sv.setScrollPosition((int)(BA.ObjectToNumber(_data[(int) (0)])));
  //BA.debugLineNum = 191;BA.debugLine="DoEvents";
@@ -187,7 +187,7 @@ anywheresoftware.b4a.keywords.Common.DoEvents();
  //BA.debugLineNum = 192;BA.debugLine="sv.ScrollPosition = data(0)";
 _sv.setScrollPosition((int)(BA.ObjectToNumber(_data[(int) (0)])));
  //BA.debugLineNum = 193;BA.debugLine="innerRestoreState(sv.Panel, list1)";
-_vvvvvvvv4(_ba,(anywheresoftware.b4a.objects.ConcreteViewWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.ConcreteViewWrapper(), (android.view.View)(_sv.getPanel().getObject())),_list1);
+_vvvvvvvvv1(_ba,(anywheresoftware.b4a.objects.ConcreteViewWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.ConcreteViewWrapper(), (android.view.View)(_sv.getPanel().getObject())),_list1);
  }else if(_v.getObjectOrNull() instanceof android.view.ViewGroup) { 
  //BA.debugLineNum = 195;BA.debugLine="Dim panel1 As Panel";
 _panel1 = new anywheresoftware.b4a.objects.PanelWrapper();
@@ -199,14 +199,14 @@ final int step59 = 1;
 final int limit59 = (int) (_panel1.getNumberOfViews()-1);
 for (_i = (int) (0) ; (step59 > 0 && _i <= limit59) || (step59 < 0 && _i >= limit59); _i = ((int)(0 + _i + step59)) ) {
  //BA.debugLineNum = 198;BA.debugLine="innerRestoreState(panel1.GetView(i), list1)";
-_vvvvvvvv4(_ba,_panel1.GetView(_i),_list1);
+_vvvvvvvvv1(_ba,_panel1.GetView(_i),_list1);
  }
 };
  };
  //BA.debugLineNum = 201;BA.debugLine="End Sub";
 return "";
 }
-public static String  _vvvvvvvv5(anywheresoftware.b4a.BA _ba,anywheresoftware.b4a.objects.ConcreteViewWrapper _v,anywheresoftware.b4a.objects.collections.List _list1) throws Exception{
+public static String  _vvvvvvvvv2(anywheresoftware.b4a.BA _ba,anywheresoftware.b4a.objects.ConcreteViewWrapper _v,anywheresoftware.b4a.objects.collections.List _list1) throws Exception{
 Object[] _data = null;
 anywheresoftware.b4a.objects.EditTextWrapper _edit = null;
 anywheresoftware.b4a.objects.SpinnerWrapper _spinner1 = null;
@@ -314,7 +314,7 @@ final int step39 = 1;
 final int limit39 = (int) (_tabparentpanel.getNumberOfViews()-1);
 for (_i = (int) (0) ; (step39 > 0 && _i <= limit39) || (step39 < 0 && _i >= limit39); _i = ((int)(0 + _i + step39)) ) {
  //BA.debugLineNum = 119;BA.debugLine="innerSaveState(tabParentPanel.GetView(i), list1";
-_vvvvvvvv5(_ba,_tabparentpanel.GetView(_i),_list1);
+_vvvvvvvvv2(_ba,_tabparentpanel.GetView(_i),_list1);
  }
 };
  }else if(_v.getObjectOrNull() instanceof android.widget.ScrollView) { 
@@ -336,7 +336,7 @@ _data[i0] = new Object();
 }
 ;
  //BA.debugLineNum = 127;BA.debugLine="innerSaveState(sv.Panel, list1)";
-_vvvvvvvv5(_ba,(anywheresoftware.b4a.objects.ConcreteViewWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.ConcreteViewWrapper(), (android.view.View)(_sv.getPanel().getObject())),_list1);
+_vvvvvvvvv2(_ba,(anywheresoftware.b4a.objects.ConcreteViewWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.ConcreteViewWrapper(), (android.view.View)(_sv.getPanel().getObject())),_list1);
  }else if(_v.getObjectOrNull() instanceof android.view.ViewGroup) { 
  //BA.debugLineNum = 129;BA.debugLine="Dim panel1 As Panel";
 _panel1 = new anywheresoftware.b4a.objects.PanelWrapper();
@@ -348,7 +348,7 @@ final int step52 = 1;
 final int limit52 = (int) (_panel1.getNumberOfViews()-1);
 for (_i = (int) (0) ; (step52 > 0 && _i <= limit52) || (step52 < 0 && _i >= limit52); _i = ((int)(0 + _i + step52)) ) {
  //BA.debugLineNum = 132;BA.debugLine="innerSaveState(panel1.GetView(i), list1)";
-_vvvvvvvv5(_ba,_panel1.GetView(_i),_list1);
+_vvvvvvvvv2(_ba,_panel1.GetView(_i),_list1);
  }
 };
  };
@@ -358,7 +358,7 @@ _list1.Add((Object)(_data));};
  //BA.debugLineNum = 136;BA.debugLine="End Sub";
 return "";
 }
-public static String  _vvvvvvvv6(anywheresoftware.b4a.BA _ba) throws Exception{
+public static String  _vvvvvvvvv3(anywheresoftware.b4a.BA _ba) throws Exception{
 anywheresoftware.b4a.randomaccessfile.RandomAccessFile _raf = null;
  //BA.debugLineNum = 237;BA.debugLine="Private Sub loadStateFile";
  //BA.debugLineNum = 239;BA.debugLine="If states.IsInitialized Then Return";
@@ -388,9 +388,9 @@ _v7 = 0;
 _v0 = "";
 _vv1 = "";
  //BA.debugLineNum = 7;BA.debugLine="statesFileName = \"state.dat\"";
-_v0 = BA.__b (new byte[] {122,98,83,-94,99,63,19,-73,99}, 668411);
+_v0 = BA.__b (new byte[] {122,99,-48,-49,99,62,-112,-38,99}, 440678);
  //BA.debugLineNum = 8;BA.debugLine="settingsFileName = \"settings.properties\"";
-_vv1 = BA.__b (new byte[] {122,115,-24,-124,111,127,-66,-125,57,53,-86,-98,118,115,-18,-127,97,96,-86}, 837124);
+_vv1 = BA.__b (new byte[] {122,115,72,-94,111,127,30,-91,57,53,10,-72,118,115,78,-89,97,96,10}, 664829);
  //BA.debugLineNum = 9;BA.debugLine="Dim settings As Map";
 _vv2 = new anywheresoftware.b4a.objects.collections.Map();
  //BA.debugLineNum = 10;BA.debugLine="End Sub";
@@ -399,13 +399,13 @@ return "";
 public static String  _vv5(anywheresoftware.b4a.BA _ba,String _activityname) throws Exception{
  //BA.debugLineNum = 52;BA.debugLine="Public Sub ResetState(ActivityName As String)";
  //BA.debugLineNum = 53;BA.debugLine="loadStateFile";
-_vvvvvvvv6(_ba);
+_vvvvvvvvv3(_ba);
  //BA.debugLineNum = 54;BA.debugLine="If states.IsInitialized Then";
 if (_v6.IsInitialized()) { 
  //BA.debugLineNum = 55;BA.debugLine="states.Remove(ActivityName.ToLowerCase)";
 _v6.Remove((Object)(_activityname.toLowerCase()));
  //BA.debugLineNum = 56;BA.debugLine="writeStateToFile";
-_vvvvvvvv7(_ba);
+_vvvvvvvvv4(_ba);
  };
  //BA.debugLineNum = 58;BA.debugLine="End Sub";
 return "";
@@ -417,7 +417,7 @@ int _i = 0;
  //BA.debugLineNum = 211;BA.debugLine="Public Sub RestoreState(Activity As Activity, Acti";
  //BA.debugLineNum = 212;BA.debugLine="Try";
 try { //BA.debugLineNum = 213;BA.debugLine="loadStateFile";
-_vvvvvvvv6(_ba);
+_vvvvvvvvv3(_ba);
  //BA.debugLineNum = 214;BA.debugLine="If states.IsInitialized = False Then";
 if (_v6.IsInitialized()==anywheresoftware.b4a.keywords.Common.False) { 
  //BA.debugLineNum = 215;BA.debugLine="Return False";
@@ -447,7 +447,7 @@ final int step15 = 1;
 final int limit15 = (int) (_activity.getNumberOfViews()-1);
 for (_i = (int) (0) ; (step15 > 0 && _i <= limit15) || (step15 < 0 && _i >= limit15); _i = ((int)(0 + _i + step15)) ) {
  //BA.debugLineNum = 227;BA.debugLine="innerRestoreState(Activity.GetView(i), list1)";
-_vvvvvvvv4(_ba,_activity.GetView(_i),_list1);
+_vvvvvvvvv1(_ba,_activity.GetView(_i),_list1);
  }
 };
  //BA.debugLineNum = 229;BA.debugLine="Return True";
@@ -493,13 +493,13 @@ final int step5 = 1;
 final int limit5 = (int) (_activity.getNumberOfViews()-1);
 for (_i = (int) (0) ; (step5 > 0 && _i <= limit5) || (step5 < 0 && _i >= limit5); _i = ((int)(0 + _i + step5)) ) {
  //BA.debugLineNum = 66;BA.debugLine="innerSaveState(Activity.GetView(i), list1)";
-_vvvvvvvv5(_ba,_activity.GetView(_i),_list1);
+_vvvvvvvvv2(_ba,_activity.GetView(_i),_list1);
  }
 };
  //BA.debugLineNum = 68;BA.debugLine="states.Put(ActivityName.ToLowerCase, list1)";
 _v6.Put((Object)(_activityname.toLowerCase()),(Object)(_list1.getObject()));
  //BA.debugLineNum = 69;BA.debugLine="writeStateToFile";
-_vvvvvvvv7(_ba);
+_vvvvvvvvv4(_ba);
  //BA.debugLineNum = 70;BA.debugLine="End Sub";
 return "";
 }
@@ -521,7 +521,7 @@ _vv2.Put((Object)(_key.toLowerCase()),(Object)(_value));
  //BA.debugLineNum = 42;BA.debugLine="End Sub";
 return "";
 }
-public static String  _vvvvvvvv7(anywheresoftware.b4a.BA _ba) throws Exception{
+public static String  _vvvvvvvvv4(anywheresoftware.b4a.BA _ba) throws Exception{
 anywheresoftware.b4a.randomaccessfile.RandomAccessFile _raf = null;
  //BA.debugLineNum = 72;BA.debugLine="Private Sub writeStateToFile";
  //BA.debugLineNum = 73;BA.debugLine="Dim raf As RandomAccessFile";

@@ -1,22 +1,32 @@
-﻿Version=6.48
+﻿Version=6.5
 NumberOfModules=3
 Module1=HttpUtils2Service
-Module2=StateManager
-Module3=HttpJob
+Module2=HttpJob
+Module3=StateManager
 Build1=HomeMon,be.mayeur.home.homemon
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:theme, "@android:style/Theme.Material.Light")~\n~'End of default text.~\n~'********* TabStrip ***********************~\n~CreateResource(drawable, background_tab.xml,~\n~<selector xmlns:android="http://schemas.android.com/apk/res/android"~\n~   android:exitFadeDuration="@android:integer/config_shortAnimTime">~\n~  <item android:state_pressed="true" android:drawable="@color/background_tab_pressed" />~\n~  <item android:state_focused="true" android:drawable="@color/background_tab_pressed"/>~\n~  <item android:drawable="@android:color/transparent"/>~\n~</selector>)~\n~CreateResource(values, colors.xml,~\n~<resources>~\n~  <color name="background_tab_pressed">#6633B5E5</color>~\n~</resources>)~\n~'******************************************~\n~'*************** Light theme based on version **************~\n~SetApplicationAttribute(android:theme, "@style/LightTheme")~\n~CreateResource(values-v20, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~CreateResource(values-v14, theme.xml,~\n~<resources>~\n~  <style~\n~  name="LightTheme" parent="@android:style/Theme.Material.Light">~\n~  </style>~\n~</resources>)~\n~'**********************************************************~\n~#AdditionalJar: com.android.support:support-v4~\n~
 IconFile=
-NumberOfFiles=10
-File1=kodiBlue.png
-File2=kodiGreen.png
-File3=kodiGrey.png
-File4=kodired.png
-File5=kodiYellow.png
-File6=main.bal
-File7=page1.bal
-File8=page2.bal
-File9=page3.bal
-File10=Param.bal
+NumberOfFiles=20
+File1=Favourites.bal
+File2=kodiBlue.png
+File3=kodiGreen.png
+File4=kodiGrey.png
+File5=kodired.png
+File6=kodiYellow.png
+File7=main.bal
+File8=nasblue.jpg
+File9=nasGreen.jpg
+File10=nasGrey.jpg
+File11=nasRed.jpg
+File12=nasyellow.jpg
+File13=off.png
+File14=on.png
+File15=page1.bal
+File16=page2.bal
+File17=page3.bal
+File18=Param.bal
+File19=rpi.png
+File20=rpiGrey.png
 NumberOfLibraries=10
 Library1=core
 Library2=okhttp
@@ -49,6 +59,7 @@ Sub Process_Globals
 	Dim MyLan As ServerSocket
 	Dim MyWiFi As ABWifi
 	Dim AtHome As Boolean
+	Dim Timer1 As Timer
 End Sub
 
 Sub Globals
@@ -57,6 +68,8 @@ Sub Globals
 
 	Private BaseURL As String 
 	Private TabStrip1 As TabStrip
+	Private p As Panel
+	Private pf As Panel
 	
 	Private btnCancel As Button
 	Private btnOK As Button
@@ -83,9 +96,6 @@ Sub Globals
 	Private rPI_DAC As ImageView
 	Private rPI_SPDIF As ImageView
 	
-	Private checkedSPDIF As Boolean
-	Private checkedDAC As Boolean
-	
 	Private MyHost As String
 	Private MySSID As String
 	
@@ -94,6 +104,23 @@ Sub Globals
 	Private txtHomeSSID As EditText
 	Private txtLocalServerIP As EditText
 	
+	Private skBar As SeekBar
+	
+	Private NAS As ImageView
+	Private sw_rpi1 As ImageView
+	Private sw_DAC As ImageView
+	Private sw_SPDIF As ImageView
+	Private sw_NAS As ImageView
+	Private rpi_1 As ImageView
+	
+	Dim JSON As JSONParser
+	Dim js As Map
+	Dim media As Map
+	Private lstFav As ListView
+	Private PanelFav As Panel
+	Private fav As List
+	
+	Private lblPLayingNow As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -102,8 +129,20 @@ Sub Activity_Create(FirstTime As Boolean)
 	TabStrip1.LoadLayout("Page1", "Devices")
 	TabStrip1.LoadLayout("Page2", "Spam Mon")	
 	TabStrip1.LoadLayout("Page3", "Floor Cam")
-	TabStrip1.LoadLayout("Param", "Settings")
+	' initialize parameter setting panel
+	p.Initialize("")	
+	Activity.AddView(p, 0, 0, 100%x, 100%y)
+	p.LoadLayout("Param")
+	p.Visible=False
+	' initialize kodi favourite list panel
+	pf.Initialize("")
+	Activity.AddView(pf, 0, 0, 100%x, 100%y)
+	pf.LoadLayout("Favourites")
+	pf.Visible=False
 	
+	' TabStrip1.LoadLayout("Param", "Settings")
+	
+	' create menu
 	Activity.AddMenuItem("Devices", "mnu1")
 	Activity.AddMenuItem("Spam Monitor", "mnu2")
 	Activity.AddMenuItem("Floor Cam", "mnu3")
@@ -142,22 +181,58 @@ Sub Activity_Create(FirstTime As Boolean)
 	End If
 	
 	' Initialize buttons with pictures
+	sw_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+	sw_SPDIF.Tag="off"
 	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+	
+	sw_DAC.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+	sw_DAC.Tag="off"
 	rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
+	
+	sw_NAS.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+	sw_NAS.Tag="Unknown"
+	NAS.Bitmap=LoadBitmap(File.DirAssets, "nasGrey.jpg")
+	
+	sw_rpi1.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+	rpi_1.Bitmap=LoadBitmap(File.DirAssets,"rpi.png")
+	sw_rpi1.Tag="off"
 	
 	' Get webcam parameters
 	txtCAM1port.text=StateManager.GetSetting2("CAM1port", "8084")
 	txtCAM2port.text=StateManager.GetSetting2("CAM2port", "8083")
 	
+	' Start timer to refresh device states
+	Timer1.Initialize("Timer1", 30000)
+	Timer1.Enabled=True
+	
 End Sub
 
 Sub Activity_Resume
-	Probe_rPI("rPI_SPDIF")
-	Probe_rPI("rPI_DAC")
+
+	Probe_all
+	
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 
+End Sub
+
+Sub Timer1_Tick
+	Probe_all
+End Sub
+
+Sub Probe_all
+	If sw_NAS.Tag = "off" Then
+		Probe_device("NAS")
+	Else
+		Probe_linux("NAS")
+	End If
+	Probe_device("SAM")
+	Probe_linux("rPI1")
+	Probe_kodi("rPI_SPDIF")
+	Probe_kodi("rPI_DAC")
+	
+	Probe_kodiPlayer("rPI_SPDIF")
 End Sub
 
 Sub mnu1_Click
@@ -173,13 +248,19 @@ Sub mnu3_Click
 End Sub
 
 Sub mnuSettings_Click
-	TabStrip1.ScrollTo(3, True)
+	' TabStrip1.ScrollTo(3, True)
+	p.LoadLayout("Param")
+	p.Visible=True
 End Sub
 
 Sub TabStrip1_PageSelected (Position As Int)
-	' Log($"Current page: ${Position}"$)
+	Log($"Current page: ${Position}"$)
+	If Position=1 Then
+		btnSpam_Click
+	Else
+		txtResult.Text=""
+	End If
 End Sub
-
 
 Sub JobDone(Job As HttpJob)
 
@@ -190,53 +271,145 @@ Sub JobDone(Job As HttpJob)
 		Select Job.JobName
 		Case "Login"
 				Log("Login: " & Job.GetString)
+				
 		Case "rPIDAC"
-				rPI_DAC.Enabled=True
 				If Job.GetString = "Kodi On" Then
-					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
 				Else If Job.GetString = "OFF" Then
 					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
 				Else If Job.GetString = "POWERED" Then
-					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
+					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
 				Else
 					rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiRed.png")
 				End If
+				
 		Case "rPISPDIF" 
 			If Job.GetString = "Kodi On" Then
-				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
 			Else If Job.GetString = "OFF" Then
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
 			Else If Job.GetString = "POWERED" Then
-					rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
+					rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
 			Else
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiRed.png")
 			End If	
-		Case "prPI_SPDIF" 
+			
+		Case "pkrPI_SPDIF" 
 				If Job.GetString = "OFF"  Or Job.GetString = "success" Then
-				checkedSPDIF = False
+				sw_SPDIF.Tag="off"
+				sw_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "off.png")
 				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")				
 			Else if Job.GetString = "Kodi On" Then
-				checkedSPDIF = True
-				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")	
+				sw_SPDIF.Tag="on"
+				sw_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "on.png")
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")	
 			Else ' powered but kodi does not answer
-				checkedSPDIF=False
-				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")				
+				sw_SPDIF.Tag="on"
+				sw_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "on.png")
+				rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")				
 			End If	
-		Case "prPI_DAC"
-			rPI_DAC.Enabled=True
+			
+		Case "pkrPI_DAC"
 			If Job.GetString = "OFF" Or Job.GetString = "success" Then
-				checkedDAC = False
+				sw_DAC.Tag="off"
+				sw_DAC.Bitmap=LoadBitmap(File.DirAssets, "off.png")
 				rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
 			Else if Job.GetString = "Kodi On" Then
-				checkedDAC = True
-				rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGreen.png")
-			Else ' powered but kodi does not answer
-				checkedDAC=False
+				sw_DAC.Tag="on"
+				sw_DAC.Bitmap=LoadBitmap(File.DirAssets, "on.png")
 				rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiBlue.png")
+			Else ' powered but kodi does not answer
+				sw_DAC.Tag="on"
+				sw_DAC.Bitmap=LoadBitmap(File.DirAssets, "on.png")
+				rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
 			End If
+			
 		Case "spam", "spamStart", "spamStop"
 			txtResult.Text= Job.GetString			
+		
+		Case "pdSAM"		
+			If Job.GetString="OFF" Or Job.GetString.Contains("Unknown") Then 
+				skBar.Value=0
+			Else If Job.GetString="ON" Then
+				skBar.Value=255
+			Else
+				skBar.Value=Job.GetString
+			End If
+				
+		Case "SAM"
+				skBar.Enabled=True
+			
+		Case "pdNAS"
+			If Job.GetString="OFF" Or Job.GetString.Contains("Unknown") Then
+				sw_NAS.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+				sw_NAS.Tag="off"
+				NAS.Bitmap=LoadBitmap(File.DirAssets, "nasGrey.jpg")	
+			Else If Job.GetString="ON" Then
+				sw_NAS.Bitmap=LoadBitmap(File.DirAssets, "on.png")
+				sw_NAS.Tag="on"
+				NAS.Bitmap=LoadBitmap(File.DirAssets,"nasyellow.jpg")
+			Else
+				sw_NAS.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+				sw_NAS.Tag="off"
+				NAS.Bitmap=LoadBitmap(File.DirAssets,"nasRed.jpg")
+				End If
+
+		Case "plNAS"
+			If (Job.GetString="Alive") Then
+				NAS.Bitmap=LoadBitmap(File.DirAssets, "nasBlue.jpg")
+				sw_NAS.Tag="Alive"
+				sw_NAS.Bitmap=LoadBitmap(File.DirAssets,"on.png")
+			Else
+				sw_NAS.Tag="Unknown"
+			End If
+		
+		Case "plrPI1"
+			If (Job.GetString="Alive") Then
+				rpi_1.Bitmap=LoadBitmap(File.DirAssets, "rpi.png")
+				sw_rpi1.Bitmap=LoadBitmap(File.DirAssets, "on.png")
+				sw_rpi1.Tag="Alive"
+			Else
+				rpi_1.Bitmap=LoadBitmap(File.DirAssets, "rpiGrey.png")
+				sw_rpi1.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+				sw_rpi1.Tag="off"
+			End If
+			
+		Case "Fav"		
+			If Job.GetString.Contains("failed") = False Then
+				JSON.Initialize(Job.GetString)
+				lstFav.SingleLineLayout.Label.TextColor=Colors.Black
+				lstFav.SingleLineLayout.Label.TextSize = 12
+				lstFav.SingleLineLayout.Label.Gravity = Gravity.LEFT
+				
+	'			js=JSON.NextObject
+	'			js = js.Get("result")
+	'			fav = js.get("favourites")
+
+				fav=JSON.NextArray
+				lstFav.Clear
+				
+				For i = 0 To fav.Size-1
+					media = fav.Get(i)
+					lstFav.AddSingleLine( "#" & i & ": " & media.Get("title"))
+				Next
+				pf.Visible=True
+				lblPLayingNow.Visible=False
+			End If
+			
+		Case "PlayFav"
+				If Job.GetString.Contains("failed") = False Then
+				JSON.Initialize(Job.GetString)
+				js=JSON.NextObject
+				If js.Get("result") = "OK" Then
+					lblPLayingNow.Visible=True	
+				End If
+			End If
+			
+			Case "pkprPI_SPDIF"
+				lblPLayingNow.Text=Job.GetString
+			
 		End Select
+		
 
 	Else
 		Log("error" & Job.ErrorMessage)	
@@ -244,25 +417,64 @@ Sub JobDone(Job As HttpJob)
 			rPI_SPDIF.Enabled=True
 		Else if  Job.JobName.Contains("DAC") Then
 			rPI_DAC.Enabled=True
+		Else If Job.JobName.Contains("SAM") Then
+			skBar.Enabled=True
 		End If
 	End If
-
 
 	Job.Release	
 
 
 End Sub
 
-Sub Probe_rPI(id As String)
+Sub Probe_kodi(id As String)
 	Dim Job As HttpJob
 	Dim url As String
 	
 	url = BaseURL & "/kodistate"
-	Job.Initialize("p" & id, Me)
+	Job.Initialize("pk" & id, Me)
 	Job.Username =txtUser.Text
 	Job.Password =txtPassword.Text
 	
 	Job.Download(url & "?id=" & id)
+	
+End Sub
+
+Sub Probe_kodiPlayer(id As String)
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/kodiPlay"
+	Job.Initialize("pkp" & id, Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	
+	Job.PostString(url,"id=rPI_SPDIF&method=getcurrentmedia")
+End Sub
+
+Sub Probe_device(id As String)
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/tdstate"
+	Job.Initialize("pd" & id, Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	
+	Job.Download(url & "?id=" & id)
+	
+End Sub
+
+Sub Probe_linux(id As String)
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/ping"
+	Job.Initialize("pl" & id, Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	
+	Job.PostString(url, "id=" & id)
 	
 End Sub
 
@@ -283,11 +495,13 @@ Sub btnOK_Click
 	If AtHome = False Then
 		BaseURL=txtServer.Text & ":" & txtPort.Text
 	End If
+	p.Visible=False
 	TabStrip1.ScrollTo(0, True)
 End Sub
 
 Sub btnCancel_Click
-	
+	p.Visible=False
+	TabStrip1.ScrollTo(0, True)
 End Sub
 
 Sub btnSpam_Click
@@ -335,42 +549,95 @@ Sub btnLoadGFl_Click
 	WebView1.LoadUrl(MyHost.Replace("https", "http") & ":" & txtCAM1port.text)
 End Sub
 
-
 Sub btnClear_Click
 	WebView1.LoadHtml("<html><body>Press a button</body></html>")
+End Sub
+
+Sub skBar_ValueChanged (Value As Int, UserChanged As Boolean)
+	Dim Job As HttpJob
+	Dim url As String
+	
+	If Value < 10 Then Value = 0
+	
+	url = BaseURL & "/tdcmd"
+	Job.Initialize("SAM", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	Job.PostString(url,"id=SAM&method=DIM&value=" & Value)
+	skBar.Enabled=False
+	
+End Sub
+
+Sub NAS_Click
+	
+End Sub
+
+Sub NAS_LongClick
+	
+End Sub
+
+Sub sw_SPDIF_Click
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/kodi"
+	Job.Initialize("rPISPDIF", Me)
+	
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
+	If sw_SPDIF.Tag="on" Then
+		Job.PostString(url,"id=rPI_SPDIF&method=OFF")
+		sw_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+		sw_SPDIF.Tag="off"
+	Else
+		Job.PostString(url,"id=rPI_SPDIF&method=ON")
+		sw_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "on.png")
+		sw_SPDIF.Tag="on"
+	End If
+	Job.GetRequest.Timeout=100000
+
 End Sub
 
 Sub rPI_SPDIF_Click
 	Dim Job As HttpJob
 	Dim url As String
 	
-	url = BaseURL & "/kodi"
-	Job.Initialize("rPISPDIF", Me)
+	url = BaseURL & "/kodiPlay"
+	Job.Initialize("Fav", Me)
 	Job.Username =txtUser.Text
 	Job.Password =txtPassword.Text
-	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
-	If checkedSPDIF Then
-		Job.PostString(url,"id=rPI_SPDIF&method=OFF")			
-	Else
-		Job.PostString(url,"id=rPI_SPDIF&method=ON")
-	End If	
-	checkedSPDIF=Not(checkedSPDIF)	
+	
+	Job.PostString(url,"id=rPI_SPDIF&method=favourites")
 End Sub
 
 Sub rPI_SPDIF_LongClick
 	Dim Job As HttpJob
 	Dim url As String
 	
+	url = BaseURL & "/kodiPlay"
+	Job.Initialize("", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	Job.PostString(url,"id=rPI_SPDIF&method=stop")
+	lblPLayingNow.Text = ""
+End Sub
+
+Sub sw_SPDIF_LongClick
+	Dim Job As HttpJob
+	Dim url As String
+	
 	url = BaseURL & "/tdcmd"
-	Job.Initialize("prPISPDIF", Me)
+	Job.Initialize("pkrPISPDIF", Me)
 	Job.Username =txtUser.Text
 	Job.Password =txtPassword.Text
 	rPI_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
-	checkedSPDIF = False
-	Job.PostString(url,"id=rPI_SPDIF&method=OFF")		
+	sw_SPDIF.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+	sw_SPDIF.Tag="off"
+	Job.PostString(url,"id=rPI_SPDIF&method=OFF")
 End Sub
 
-Sub rPI_DAC_Click
+Sub sw_DAC_Click
 	Dim Job As HttpJob
 	Dim url As String
 	
@@ -379,16 +646,20 @@ Sub rPI_DAC_Click
 	Job.Username =txtUser.Text
 	Job.Password =txtPassword.Text
 	rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiYellow.png")
-	If checkedDAC Then
+	If sw_DAC.Tag="on" Then
 		Job.PostString(url,"id=rPI_DAC&method=OFF")
+		sw_DAC.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+		sw_DAC.Tag="off"
 	Else
 		Job.PostString(url,"id=rPI_DAC&method=ON")
+		sw_DAC.Bitmap=LoadBitmap(File.DirAssets, "on.png")
+		sw_DAC.Tag="on"
 	End If
-	checkedDAC=Not(checkedDAC)
-	rPI_DAC.Enabled=False
+	Job.GetRequest.Timeout=100000
+
 End Sub
 
-Sub rPI_DAC_LongClick
+Sub sw_DAC_LongClick
 	Dim Job As HttpJob
 	Dim url As String
 	
@@ -397,7 +668,73 @@ Sub rPI_DAC_LongClick
 	Job.Username =txtUser.Text
 	Job.Password =txtPassword.Text
 	rPI_DAC.Bitmap=LoadBitmap(File.DirAssets, "kodiGrey.png")
-	checkedDAC = False
+	sw_DAC.Bitmap=LoadBitmap(File.DirAssets,"off.png")
+	sw_DAC.Tag="off"
 	Job.PostString(url,"id=rPI_DAC&method=OFF")
-	rPI_DAC.Enabled=False
+End Sub
+
+Sub rPI_DAC_Click
+
+End Sub
+
+Sub rPI_DAC_LongClick
+
+
+End Sub
+
+Sub sw_NAS_Click
+	
+End Sub
+
+Sub sw_NAS_LongClick
+	
+End Sub
+
+Sub sw_rpi1_Click
+	If sw_rpi1.Tag = "off" Then
+		sw_rpi1.Tag="on"
+		sw_rpi1.Bitmap=LoadBitmap(File.DirAssets, "on.png")
+	Else
+		sw_rpi1.Tag="off"
+		sw_rpi1.Bitmap=LoadBitmap(File.DirAssets, "off.png")
+	End If
+End Sub
+
+Sub sw_rpi1_LongClick
+	
+End Sub
+
+Sub rpi_1_Click
+	
+End Sub
+
+Sub rpi_1_LongClick
+	
+End Sub
+
+Sub lstFav_ItemClick (Position As Int, Value As Object)
+	Dim Job As HttpJob
+	Dim url As String
+	
+	url = BaseURL & "/kodiPlay"
+	Job.Initialize("PlayFav", Me)
+	Job.Username =txtUser.Text
+	Job.Password =txtPassword.Text
+	
+	media=fav.Get(Position)
+	If media.Get("type") = "media" Then
+		Job.PostString(url,"id=rPI_SPDIF&method=" & media.Get("path"))
+		lblPLayingNow.Text=media.Get("title")
+	End If
+	pf.Visible=False
+	TabStrip1.ScrollTo(0, True)
+End Sub
+
+Sub lstFav_ItemLongClick (Position As Int, Value As Object)
+
+End Sub
+
+Sub btnFavCancel_Click
+	pf.Visible=False
+	TabStrip1.ScrollTo(0, True)
 End Sub
